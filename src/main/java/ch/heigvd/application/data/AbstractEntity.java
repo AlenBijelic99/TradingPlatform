@@ -1,11 +1,6 @@
 package ch.heigvd.application.data;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Version;
+import jakarta.persistence.*;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
@@ -16,6 +11,7 @@ public abstract class AbstractEntity {
     @SequenceGenerator(name = "idgenerator", initialValue = 1000)
     private Long id;
 
+    @Column(name = "version")
     @Version
     private int version;
 

@@ -15,10 +15,19 @@ import java.util.Set;
 @Table(name = "application_user")
 public class User extends AbstractEntity {
 
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
-    private String name;
+
+    @Column(name = "firstname", length = 40)
+    private String firstname;
+
+    @Column(name = "lastname", length = 40)
+    private String lastname;
+
+    @Column(name = "hashed_password")
     @JsonIgnore
     private String hashedPassword;
+
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
@@ -29,11 +38,17 @@ public class User extends AbstractEntity {
     public void setUsername(String username) {
         this.username = username;
     }
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstname;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstname) {
+        this.firstname = firstname;
+    }
+    public String getLastName() {
+        return lastname;
+    }
+    public void setLastName(String lastname) {
+        this.lastname = lastname;
     }
     public String getHashedPassword() {
         return hashedPassword;

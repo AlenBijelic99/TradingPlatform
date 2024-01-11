@@ -1,5 +1,4 @@
 import { AppLayout } from '@hilla/react-components/AppLayout.js';
-import { Avatar } from '@hilla/react-components/Avatar.js';
 import { Button } from '@hilla/react-components/Button.js';
 import { DrawerToggle } from '@hilla/react-components/DrawerToggle.js';
 import Placeholder from 'Frontend/components/placeholder/Placeholder.js';
@@ -41,7 +40,7 @@ export default function MainLayout() {
           {state.user ? (
             <>
               <div className="flex items-center gap-s">
-                {state.user.name}
+                {state.user.firstName}
               </div>
               <Button onClick={async () => logout()}>Sign out</Button>
             </>
