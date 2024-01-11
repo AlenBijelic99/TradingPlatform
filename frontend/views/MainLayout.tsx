@@ -5,7 +5,7 @@ import { DrawerToggle } from '@hilla/react-components/DrawerToggle.js';
 import Placeholder from 'Frontend/components/placeholder/Placeholder.js';
 import { useAuth } from 'Frontend/util/auth.js';
 import { useRouteMetadata } from 'Frontend/util/routing.js';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 
 const navLinkClasses = ({ isActive }: any) => {
@@ -14,6 +14,10 @@ const navLinkClasses = ({ isActive }: any) => {
 
 export default function MainLayout() {
   const currentTitle = useRouteMetadata()?.title ?? 'My App';
+  useEffect(() => {
+    document.title = currentTitle;
+  }, [currentTitle]);
+
   const { state, logout } = useAuth();
   const profilePictureUrl =
     state.user &&
