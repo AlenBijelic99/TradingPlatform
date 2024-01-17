@@ -1,8 +1,6 @@
 package ch.heigvd.application.services;
 
 import ch.heigvd.application.data.CryptoCurrency;
-import ch.heigvd.application.data.CryptoCurrencyRepository;
-import ch.heigvd.application.data.Price;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 public class CryptoPriceService {
 
   @Autowired
-  private CryptoCurrencyRepository cryptoCurrencyRepository;
+  private CryptoCurrencyService cryptoCurrencyService;
 
   @Autowired
   private RestTemplate restTemplate;
@@ -110,7 +108,7 @@ public class CryptoPriceService {
    */
   @Scheduled(fixedRate = 10000)
   public void schedulePriceFetch() {
-    for (CryptoCurrency cryptoCurrency : cryptoCurrencyRepository.findAll()) {
+    for (CryptoCurrency cryptoCurrency : cryptoCurrencyService.getAll()) {
       fetchPrice(cryptoCurrency);
     }
   }

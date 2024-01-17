@@ -2,8 +2,10 @@ package ch.heigvd.application.data;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
+
 
 /**
  * This interface is used to define the methods to interact with the database for the CryptoCurrency entity.
