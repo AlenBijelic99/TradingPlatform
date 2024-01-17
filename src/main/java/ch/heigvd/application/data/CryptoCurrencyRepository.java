@@ -28,6 +28,6 @@ public interface CryptoCurrencyRepository extends JpaRepository<CryptoCurrency, 
    */
   Optional<CryptoCurrency> findBySymbol(String symbol);
 
-  @Query("SELECT c FROM CryptoCurrency c JOIN FETCH c.prices WHERE c.name = ?1")
-  CryptoCurrency getCryptoWithLastPrice(String name);
+  @Query("SELECT c FROM CryptoCurrency c JOIN FETCH c.prices WHERE c.symbol = ?1")
+  CryptoCurrency getCryptoWithLastPrice(String symbol);
 }
