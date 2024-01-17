@@ -18,23 +18,6 @@ export default function HelloWorldView() {
 
     return (
         <>
-            <section className="flex p-m gap-m items-end">
-                <TextField
-                    label="Your name"
-                    onValueChanged={(e) => {
-                        setName(e.detail.value);
-                    }}
-                />
-                <Button
-                    onClick={async () => {
-                        const serverResponse = await HelloWorldService.sayHello(name);
-                        Notification.show(serverResponse);
-                    }}
-                >
-                    Say hello
-                </Button>
-
-            </section>
             <section>
                 <div className="p-m flex gap-m">
                     <Grid
