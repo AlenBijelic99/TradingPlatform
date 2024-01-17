@@ -2,6 +2,7 @@ package ch.heigvd.application.data;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
@@ -26,4 +27,7 @@ public interface CryptoCurrencyRepository extends JpaRepository<CryptoCurrency, 
    * @return The CryptoCurrency if found.
    */
   Optional<CryptoCurrency> findBySymbol(String symbol);
+
+  @Query("SELECT c FROM CryptoCurrency c JOIN FETCH c.prices WHERE c.name = ?1")
+  CryptoCurrency getCryptoWithLastPrice(String name);
 }
