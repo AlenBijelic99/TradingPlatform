@@ -53,13 +53,12 @@ public class JmsPriceService {
     String symbol = (String) priceInfo.get("symbol");
     double price = (Double) priceInfo.get("price");
 
-    // Retrieve crypto currency from database or create it if it doesn't exist
-    CryptoCurrency cryptoCurrency = cryptoCurrencyRepository.findBySymbol(symbol).orElseGet(() -> {
-      CryptoCurrency newCryptoCurrency = new CryptoCurrency();
-      newCryptoCurrency.setSymbol(symbol);
-      newCryptoCurrency.setName(name);
-      return cryptoCurrencyRepository.save(newCryptoCurrency);
-    });
+    // Retrieve crypto currency from database
+    CryptoCurrency cryptoCurrency = cryptoCurrencyRepository.findBySymbol(symbol).orElse(null);
+    if (cryptoCurrency == null) {
+      System.err.println("Crypto currency " + symbol + " doesn't exist in database");
+      return;
+    }
 
     // Save price
     Price newPrice = new Price(price, cryptoCurrency);
