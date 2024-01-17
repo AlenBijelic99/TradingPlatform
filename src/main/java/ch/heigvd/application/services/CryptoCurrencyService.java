@@ -1,15 +1,14 @@
 package ch.heigvd.application.services;
 
-import ch.heigvd.application.data.CryptoCurrency;
-import ch.heigvd.application.data.CryptoCurrencyRepository;
-import ch.heigvd.application.data.Price;
-import ch.heigvd.application.data.PriceRepository;
+import ch.heigvd.application.data.entities.CryptoCurrency;
+import ch.heigvd.application.data.repositories.CryptoCurrencyRepository;
+import ch.heigvd.application.data.entities.Price;
+import ch.heigvd.application.data.repositories.PriceRepository;
 import dev.hilla.BrowserCallable;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 
 @BrowserCallable

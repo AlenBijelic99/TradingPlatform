@@ -1,7 +1,7 @@
 package ch.heigvd.application.services;
 
-import ch.heigvd.application.data.User;
-import ch.heigvd.application.data.UserRepository;
+import ch.heigvd.application.data.entities.User;
+import ch.heigvd.application.data.repositories.UserRepository;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

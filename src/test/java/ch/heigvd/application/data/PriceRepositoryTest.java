@@ -1,6 +1,9 @@
 package ch.heigvd.application.data;
 
-import jakarta.annotation.PostConstruct;
+import ch.heigvd.application.data.entities.CryptoCurrency;
+import ch.heigvd.application.data.entities.Price;
+import ch.heigvd.application.data.repositories.CryptoCurrencyRepository;
+import ch.heigvd.application.data.repositories.PriceRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -18,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 @SpringBootTest
 @Transactional
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) // To be able to use @BeforeAll non-static and call cryptoCurrencyRepository
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PriceRepositoryTest {
     @Autowired
     private PriceRepository priceRepository;
@@ -35,7 +38,6 @@ public class PriceRepositoryTest {
         cryptoCurrency.setSymbol("BTC");
         cryptoCurrencyRepository.save(cryptoCurrency);
     }
-
 
     /**
      * Test if the price is saved correctly.
