@@ -3,6 +3,7 @@ package ch.heigvd.application.services;
 import ch.heigvd.application.data.CryptoCurrency;
 import ch.heigvd.application.data.CryptoCurrencyRepository;
 import ch.heigvd.application.data.Price;
+import ch.heigvd.application.data.PriceRepository;
 import dev.hilla.BrowserCallable;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,12 @@ public class CryptoCurrencyService {
     @Autowired
     private final CryptoCurrencyRepository cryptoCurrencyRepository;
 
-    public CryptoCurrencyService(CryptoCurrencyRepository cryptoCurrencyRepository) {
+    @Autowired
+    private final PriceRepository priceRepository;
+
+    public CryptoCurrencyService(CryptoCurrencyRepository cryptoCurrencyRepository, PriceRepository priceRepository) {
         this.cryptoCurrencyRepository = cryptoCurrencyRepository;
+        this.priceRepository = priceRepository;
     }
 
     public record CryptoCurrencyRecord(
@@ -30,9 +35,7 @@ public class CryptoCurrencyService {
     }
 
     private CryptoCurrencyRecord toCompanyRecord(CryptoCurrency cryptoCurrency) {
-        // TODO: Retrieve lastprice of a crypto currency with a request to be more eficient
-        Price lastPrice = cryptoCurrency.getPrices().stream().max(Comparator.comparing(Price::getDate))
-                .orElse(null);
+        Price lastPrice = priceRepository.findFirstByCryptoCurrencyOrderByDateDesc(cryptoCurrency).orElse(null);
 
         return new CryptoCurrencyRecord(
                 cryptoCurrency.getName(),
