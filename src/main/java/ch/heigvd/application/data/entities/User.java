@@ -1,18 +1,13 @@
 package ch.heigvd.application.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Set;
 
 /**
  * This class is used to represent a user of the application.
+ *
  * @author Alen Bijelic, Tegest Bogale
  */
 @Entity
@@ -39,8 +34,12 @@ public class User extends AbstractEntity {
     @Column(name = "funds")
     private double funds;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Trade> trades;
+
     /**
      * Get the username of the user.
+     *
      * @return The username of the user
      */
     public String getUsername() {
@@ -49,6 +48,7 @@ public class User extends AbstractEntity {
 
     /**
      * Set the username of the user.
+     *
      * @param username The username of the user
      */
     public void setUsername(String username) {
@@ -57,6 +57,7 @@ public class User extends AbstractEntity {
 
     /**
      * Get the first name of the user.
+     *
      * @return The first name of the user
      */
     public String getFirstName() {
@@ -65,6 +66,7 @@ public class User extends AbstractEntity {
 
     /**
      * Set the first name of the user.
+     *
      * @param firstname The first name of the user
      */
     public void setFirstName(String firstname) {
@@ -73,6 +75,7 @@ public class User extends AbstractEntity {
 
     /**
      * Get the last name of the user.
+     *
      * @return The last name of the user
      */
     public String getLastName() {
@@ -81,6 +84,7 @@ public class User extends AbstractEntity {
 
     /**
      * Set the last name of the user.
+     *
      * @param lastname The last name of the user
      */
     public void setLastName(String lastname) {
@@ -89,6 +93,7 @@ public class User extends AbstractEntity {
 
     /**
      * Get the hashed password of the user.
+     *
      * @return The hashed password of the user
      */
     public String getHashedPassword() {
@@ -97,6 +102,7 @@ public class User extends AbstractEntity {
 
     /**
      * Set the hashed password of the user.
+     *
      * @param hashedPassword The hashed password of the user
      */
     public void setHashedPassword(String hashedPassword) {
@@ -105,6 +111,7 @@ public class User extends AbstractEntity {
 
     /**
      * Get the roles of the user.
+     *
      * @return The roles of the user
      */
     public Set<Role> getRoles() {
@@ -113,6 +120,7 @@ public class User extends AbstractEntity {
 
     /**
      * Set the roles of the user.
+     *
      * @param roles The roles of the user
      */
     public void setRoles(Set<Role> roles) {
@@ -121,6 +129,7 @@ public class User extends AbstractEntity {
 
     /**
      * Get the funds of the user.
+     *
      * @return The funds of the user
      */
     public double getFunds() {
@@ -129,6 +138,7 @@ public class User extends AbstractEntity {
 
     /**
      * Set the funds of the user.
+     *
      * @param funds The funds of the user
      */
     public void setFunds(double funds) {

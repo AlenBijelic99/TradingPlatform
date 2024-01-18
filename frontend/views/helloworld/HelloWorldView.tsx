@@ -3,7 +3,7 @@ import { Notification } from '@hilla/react-components/Notification.js';
 import { TextField } from '@hilla/react-components/TextField.js';
 import {Grid} from "@hilla/react-components/Grid";
 import {GridColumn} from "@hilla/react-components/GridColumn";
-import {CryptoCurrencyService, HelloWorldService} from 'Frontend/generated/endpoints.js';
+import {CryptoCurrencyService} from 'Frontend/generated/endpoints.js';
 import {useEffect, useState} from 'react';
 import CryptoCurrencyRecord
     from "Frontend/generated/ch/heigvd/application/services/CryptoCurrencyService/CryptoCurrencyRecord";
