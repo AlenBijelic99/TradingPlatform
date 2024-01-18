@@ -51,4 +51,12 @@ public class CryptoCurrencyService {
         return cryptoCurrencyRepository.findAll().stream()
                 .map(this::toCompanyRecord).toList();
     }
+
+    public CryptoCurrencyRecord getOneWithPrice(String symbol) throws RuntimeException {
+        CryptoCurrency cryptoCurrency = cryptoCurrencyRepository.findBySymbol(symbol).orElse(null);
+        if (cryptoCurrency == null) {
+           throw new RuntimeException("CryptoCurrency not found");
+        }
+        return toCompanyRecord(cryptoCurrency);
+    }
 }
