@@ -50,7 +50,7 @@ public class Price extends AbstractEntity {
    * @param price The price of the crypto currency
    */
   public void setPrice(Double price) {
-    price = price;
+    this.price = price;
   }
 
   /**
