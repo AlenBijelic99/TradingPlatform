@@ -1,6 +1,6 @@
 package ch.heigvd.application.services;
 
-import ch.heigvd.application.data.CryptoCurrency;
+import ch.heigvd.application.data.entities.CryptoCurrency;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;

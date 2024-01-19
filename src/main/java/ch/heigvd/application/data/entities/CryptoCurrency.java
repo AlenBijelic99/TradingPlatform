@@ -1,4 +1,4 @@
-package ch.heigvd.application.data;
+package ch.heigvd.application.data.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -15,6 +15,14 @@ public class CryptoCurrency extends AbstractEntity {
 
     @OneToMany(mappedBy = "cryptoCurrency")
     private Set<Price> prices;
+
+    public CryptoCurrency() {
+    }
+
+    public CryptoCurrency(String name, String symbol) {
+        this.name = name;
+        this.symbol = symbol;
+    }
 
     public String getName() {
         return name;

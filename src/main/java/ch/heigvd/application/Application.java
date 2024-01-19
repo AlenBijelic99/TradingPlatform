@@ -1,6 +1,6 @@
 package ch.heigvd.application;
 
-import ch.heigvd.application.data.UserRepository;
+import ch.heigvd.application.data.repositories.UserRepository;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
 import javax.sql.DataSource;
