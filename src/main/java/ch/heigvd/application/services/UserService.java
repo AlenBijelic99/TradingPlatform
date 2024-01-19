@@ -42,7 +42,7 @@ public class UserService implements FormService<UserDto, Long> {
     public @Nullable UserDto save(UserDto value) {
         User existingUser = userRepository.findByUsername(value.username());
         if (existingUser != null) {
-            throw new IllegalArgumentException("User already exists");
+            throw new RuntimeException("User already exists");
         }
 
         String hashedPassword = passwordEncoder.encode(value.password());

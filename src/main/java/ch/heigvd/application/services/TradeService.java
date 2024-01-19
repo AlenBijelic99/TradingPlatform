@@ -83,7 +83,7 @@ public class TradeService {
      */
     private User getUser() {
         return authenticatedUser.get()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     /**
@@ -93,7 +93,7 @@ public class TradeService {
      */
     private CryptoCurrency getCryptoCurrency(String symbol) {
         return cryptoCurrencyRepository.findBySymbol(symbol)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RuntimeException("Crypto currency not found: " + symbol));
     }
 
     /**
@@ -103,7 +103,7 @@ public class TradeService {
      */
     private Price getPrice(CryptoCurrency cryptoCurrency) {
         return priceRepository.findFirstByCryptoCurrencyOrderByDateDesc(cryptoCurrency)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RuntimeException("Price not found"));
     }
 
     /**

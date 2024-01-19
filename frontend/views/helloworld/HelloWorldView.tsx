@@ -17,17 +17,23 @@ export default function HelloWorldView() {
     const [cryptoCurrencies, setCryptoCurrencies] = useState<CryptoCurrencyRecord[]>([]);
 
     useEffect(() => {
-        CryptoCurrencyService.getAllWithPrice().then(setCryptoCurrencies);
-    });
+        CryptoCurrencyService.getAllWithPrice()
+            .then(setCryptoCurrencies)
+            .catch(error => {
+                Notification.show(error.response.error, { theme: 'error' });
+            });
+    }, []);
 
     const handleOnSuccess = () => {
         window.location.href = '/login';
     }
 
-    const handleOnSubmitError = ({ error }: { error: unknown }) => {
+    const handleOnSubmitError = ({ error }: { error: any }) => {
         const json = JSON.stringify(error);
-        Notification.show('Error while submitting: ' + json, {theme: 'error'});
-    };
+        console.log(error)
+        console.log(json)
+        Notification.show('Error while submitting: ' + json);
+    }
 
     return (
         <>
