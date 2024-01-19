@@ -2,6 +2,8 @@ package ch.heigvd.application.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Set;
 
@@ -15,16 +17,24 @@ import java.util.Set;
 public class User extends AbstractEntity {
 
     @Column(name = "username", unique = true, nullable = false)
+    @NotNull
+    @NotBlank
     private String username;
 
     @Column(name = "firstname", length = 40)
+    @NotNull
+    @NotBlank
     private String firstname;
 
     @Column(name = "lastname", length = 40)
+    @NotNull
+    @NotBlank
     private String lastname;
 
     @Column(name = "hashed_password")
     @JsonIgnore
+    @NotNull
+    @NotBlank
     private String hashedPassword;
 
     @Enumerated(EnumType.STRING)
@@ -36,6 +46,18 @@ public class User extends AbstractEntity {
 
     @OneToMany(mappedBy = "user")
     private Set<Trade> trades;
+
+    public User() {
+    }
+
+    public User(String username, String firstname, String lastname, String hashedPassword, Set<Role> roles, double funds) {
+        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.hashedPassword = hashedPassword;
+        this.roles = roles;
+        this.funds = funds;
+    }
 
     /**
      * Get the username of the user.
