@@ -2,15 +2,19 @@ import {Notification} from '@hilla/react-components/Notification.js';
 import {AutoForm} from '@hilla/react-crud';
 import {UserService} from 'Frontend/generated/endpoints.js';
 import UserDtoModel from "Frontend/generated/ch/heigvd/application/data/dto/UserDtoModel";
-import { PasswordField } from "@hilla/react-components/PasswordField";
+import {PasswordField} from "@hilla/react-components/PasswordField";
+import {useNavigate} from "react-router-dom";
+import {Button} from "@hilla/react-components/Button.js";
 
-interface SignUpViewProps {
-    onSignUpSuccess: () => void;
-}
-export default function SignUpView({onSignUpSuccess}:SignUpViewProps) {
+export default function RegisterView() {
 
-    const handleOnSuccess = () => {
-        onSignUpSuccess();
+    const navigate = useNavigate();
+
+    const redirectToLogin = () => {
+        navigate('/login');
+    };
+    const redirectToWelcome = () => {
+        navigate('/');
     };
 
     const handleOnSubmitError = ({error}: { error: unknown }) => {
@@ -19,19 +23,20 @@ export default function SignUpView({onSignUpSuccess}:SignUpViewProps) {
     };
     return (
         <>
-            <section>
-                <AutoForm
-                    service={UserService}
-                    model={UserDtoModel}
-                    fieldOptions={{
-                        password: {
-                            renderer: ({field}) => <PasswordField {...field} label="Password"/>
-                        },
-                    }}
-                    onSubmitSuccess={handleOnSuccess}
-                    onSubmitError={handleOnSubmitError}
-                />
-            </section>
+        <section>
+            <AutoForm
+                service={UserService}
+                model={UserDtoModel}
+                fieldOptions={{
+                    password: {
+                        renderer: ({field}) => <PasswordField {...field} label="Password"/>
+                    },
+                }}
+                onSubmitSuccess={redirectToLogin}
+                onSubmitError={handleOnSubmitError}
+            />
+            <button onClick={redirectToWelcome}> Go back to Home page</button>
+        </section>
         </>
     );
 }
