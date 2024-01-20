@@ -1,7 +1,7 @@
 package ch.heigvd.application.security;
 
-import ch.heigvd.application.data.User;
-import ch.heigvd.application.data.UserRepository;
+import ch.heigvd.application.data.entities.User;
+import ch.heigvd.application.data.repositories.UserRepository;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import java.util.Optional;
 import org.springframework.security.oauth2.jwt.Jwt;

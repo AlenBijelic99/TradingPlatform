@@ -3,14 +3,15 @@ import HomeView from 'Frontend/views/home/HomeView';
 import LoginView from 'Frontend/views/login/LoginView.js';
 import MainLayout from 'Frontend/views/MainLayout.js';
 import {lazy} from 'react';
-import {createBrowserRouter, RouteObject} from 'react-router-dom';
-import SignUpView from "Frontend/views/signUp/SignUpView";
-import TradingView from "Frontend/views/trading/tradingView";
+import {createBrowserRouter, RouteObject, useNavigate} from 'react-router-dom';
+import RegisterView from "Frontend/views/signUp/RegisterView";
+import WelcomeView from "Frontend/views/WelcomeView";
 
-const AboutView = lazy(async () => import('Frontend/views/trading/tradingView'));
+const TradingView = lazy(async () => import('Frontend/views/trading/tradingView'));
 
 export const routes = protectRoutes([
-    {path: '/', element: <SignUpView/>},
+    {path: '/', element: <WelcomeView/>},
+    {path: '/register', element: <RegisterView/>},
     {path: '/login', element: <LoginView/>},
     {
         element: <MainLayout/>,

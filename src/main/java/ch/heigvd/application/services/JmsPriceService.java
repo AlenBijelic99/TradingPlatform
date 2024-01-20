@@ -1,9 +1,9 @@
 package ch.heigvd.application.services;
 
-import ch.heigvd.application.data.CryptoCurrency;
-import ch.heigvd.application.data.CryptoCurrencyRepository;
-import ch.heigvd.application.data.Price;
-import ch.heigvd.application.data.PriceRepository;
+import ch.heigvd.application.data.entities.CryptoCurrency;
+import ch.heigvd.application.data.repositories.CryptoCurrencyRepository;
+import ch.heigvd.application.data.entities.Price;
+import ch.heigvd.application.data.repositories.PriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
