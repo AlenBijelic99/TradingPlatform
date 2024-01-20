@@ -7,7 +7,7 @@ import {createBrowserRouter, RouteObject, useNavigate} from 'react-router-dom';
 import RegisterView from "Frontend/views/signUp/RegisterView";
 import WelcomeView from "Frontend/views/WelcomeView";
 
-const TradingView = lazy(async () => import('Frontend/views/profile/profileView'));
+const AccountView = lazy(async () => import('Frontend/views/account/AccountView'));
 
 export const routes = protectRoutes([
     {path: '/', element: <WelcomeView/>},
@@ -18,7 +18,7 @@ export const routes = protectRoutes([
         handle: {title: 'Main'},
         children: [
             {path: '/home', element: <TradeView/>, handle: {title: 'Enjoy Trading', requiresLogin: true}},
-            {path: '/trade', element: <TradingView/>, handle: {title: 'Profile', requiresLogin: true}},
+            {path: '/account', element: <AccountView />, handle: {title: 'My Account', requiresLogin: true}},
         ],
     },
 
