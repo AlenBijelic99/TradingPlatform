@@ -8,7 +8,7 @@ import {useEffect, useState} from 'react';
 import CryptoCurrencyRecord
     from "Frontend/generated/ch/heigvd/application/services/CryptoCurrencyService/CryptoCurrencyRecord";
 
-export default function HomeView() {
+export default function TradeView() {
     const [cryptoCurrencies, setCryptoCurrencies] = useState<CryptoCurrencyRecord[]>([]);
 
     useEffect(() => {

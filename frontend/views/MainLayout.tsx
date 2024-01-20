@@ -26,12 +26,12 @@ export default function MainLayout() {
           <nav>
             {state.user ? (
               <NavLink className={navLinkClasses} to="/home">
-                Home
+                Trade
               </NavLink>
             ) : null}
             {state.user ? (
               <NavLink className={navLinkClasses} to="/trade">
-                Trade
+                Profile
               </NavLink>
             ) : null}
           </nav>
