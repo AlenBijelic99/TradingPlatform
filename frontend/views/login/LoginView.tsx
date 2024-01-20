@@ -1,3 +1,4 @@
+import {Button} from '@hilla/react-components/Button.js';
 import {LoginI18n, LoginOverlay, LoginOverlayElement} from '@hilla/react-components/LoginOverlay.js';
 import {useAuth} from 'Frontend/util/auth.js';
 import {useState} from 'react';
@@ -13,11 +14,17 @@ export default function LoginView() {
     const [hasError, setError] = useState<boolean>();
     const navigate = useNavigate();
 
+    const redirectToRegister = () => {
+        const url = '/register';
+        const path = new URL(url, document.baseURI).pathname;
+        navigate(path)
+    };
+
     return (
         <LoginOverlay
-            opened
-            error={hasError}
+            opened autofocus
             noForgotPassword
+            error={hasError}
             i18n={loginI18n}
             onLogin={async ({detail: {username, password}}) => {
                 const {error} = await login(username, password);
@@ -30,6 +37,21 @@ export default function LoginView() {
                     navigate(path);
                 }
             }}
-        />
+
+        >
+            <Button slot="footer"
+                    onClick={() => {
+                        // TODO fix redirection
+                        console.log('Navigating to /register');
+                        redirectToRegister();
+                    }}
+                    theme="primary"
+                    style={{justifySelf: 'center', alignSelf: 'center', marginTop: '1rem'}}
+
+            >Back To Register</Button>
+
+
+        </LoginOverlay>
+
     );
 }
