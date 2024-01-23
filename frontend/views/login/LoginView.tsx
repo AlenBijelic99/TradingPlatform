@@ -40,7 +40,7 @@ export default function LoginView() {
                 }}
 
             >
-                <Link slot="footer"  to={'/register'}>Go to register</Link>
+                <Link slot="footer" to={'/register'}>Go to register</Link>
             </LoginOverlay>
         </>
 

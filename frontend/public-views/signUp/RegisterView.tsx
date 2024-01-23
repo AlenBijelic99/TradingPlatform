@@ -19,21 +19,22 @@ export default function RegisterView() {
         Notification.show('Error while submitting: ' + json, {theme: 'error'});
     };
     return (
-        <>
-        <section>
-            <AutoForm
-                service={UserService}
-                model={UserDtoModel}
-                fieldOptions={{
-                    password: {
-                        renderer: ({field}) => <PasswordField {...field} label="Password"/>
-                    },
-                }}
-                onSubmitSuccess={redirectToLogin}
-                onSubmitError={handleOnSubmitError}
-            />
-            <Link to={"/"}> Go back to Home page</Link>
-        </section>
-        </>
+        <div className="container">
+            <section className="form-section">
+                <h1>Register</h1>
+                <AutoForm
+                    service={UserService}
+                    model={UserDtoModel}
+                    fieldOptions={{
+                        password: {
+                            renderer: ({field}) => <PasswordField {...field} label="Password"/>
+                        },
+                    }}
+                    onSubmitSuccess={redirectToLogin}
+                    onSubmitError={handleOnSubmitError}
+                />
+                <Link to={"/login"}> Go to login page</Link>
+            </section>
+        </div>
     );
 }

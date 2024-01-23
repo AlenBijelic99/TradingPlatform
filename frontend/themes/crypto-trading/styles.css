@@ -1,0 +1,12 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form-section {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+}
