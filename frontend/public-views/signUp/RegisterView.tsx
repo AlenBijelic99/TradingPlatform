@@ -1,9 +1,9 @@
 import {Notification} from '@hilla/react-components/Notification.js';
 import {AutoForm} from '@hilla/react-crud';
-import {UserService} from 'Frontend/generated/endpoints.js';
+import {UserService} from 'Frontend/generated/endpoints';
 import UserDtoModel from "Frontend/generated/ch/heigvd/application/data/dto/UserDtoModel";
 import {PasswordField} from "@hilla/react-components/PasswordField";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {Button} from "@hilla/react-components/Button.js";
 
 export default function RegisterView() {
@@ -12,9 +12,6 @@ export default function RegisterView() {
 
     const redirectToLogin = () => {
         navigate('/login');
-    };
-    const redirectToWelcome = () => {
-        navigate('/');
     };
 
     const handleOnSubmitError = ({error}: { error: unknown }) => {
@@ -35,7 +32,7 @@ export default function RegisterView() {
                 onSubmitSuccess={redirectToLogin}
                 onSubmitError={handleOnSubmitError}
             />
-            <button onClick={redirectToWelcome}> Go back to Home page</button>
+            <Link to={"/"}> Go back to Home page</Link>
         </section>
         </>
     );

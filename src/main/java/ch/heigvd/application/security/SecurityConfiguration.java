@@ -37,6 +37,10 @@ public class SecurityConfiguration extends VaadinWebSecurity {
         // Icons from the line-awesome addon
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(new AntPathRequestMatcher("/line-awesome/**/*.svg")).permitAll());
+        // Autorize home and register page without being logged in
+        http.authorizeHttpRequests(registry -> {
+            registry.requestMatchers(new AntPathRequestMatcher("/public-view")).permitAll(); // custom matcher
+        });
 
         super.configure(http);
 
