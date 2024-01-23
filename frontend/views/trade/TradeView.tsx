@@ -8,12 +8,14 @@ import {Dialog} from '@hilla/react-components/Dialog.js';
 import {Button} from "@hilla/react-components/Button.js";
 import {VerticalLayout} from "@hilla/react-components/VerticalLayout";
 import {NumberField} from "@hilla/react-components/NumberField";
+import {Notification} from "@hilla/react-components/Notification";
+import {EndpointError} from "@hilla/frontend";
 
 export default function TradeView() {
     const [cryptoCurrencies, setCryptoCurrencies] = useState<CryptoCurrencyRecord[]>([]);
     const [selectedItem, setSelectedItem] = useState<CryptoCurrencyRecord | null>(null);
     const [dialogOpened, setDialogOpened] = useState(false);
-    const [selectedAction, setSelectedAction] = useState<'Buy' | 'Sell' | null>(null);
+    const [selectedAction, setSelectedAction] = useState<'Buy' | 'Sell'>('Buy');
     const [tradeAmount, setTradeAmount] = useState<number>(0);
 
     useEffect(() => {
@@ -23,7 +25,7 @@ export default function TradeView() {
         // Reset state after successful trade
         setDialogOpened(false);
         setSelectedItem(null);
-        setSelectedAction(null);
+        setSelectedAction('Buy');
         setTradeAmount(0);
     }
     const handleTrade = async () => {
@@ -45,8 +47,13 @@ export default function TradeView() {
             }
             resetState();
         } catch (error) {
-            console.error("Error during trade:", error);
-            close();
+            if (error instanceof EndpointError) {
+                Notification.show((error as EndpointError).message, {theme: 'error'});
+                console.warn((error as EndpointError).message); // "Not implemented"
+                console.warn((error as EndpointError).type); // "dev.hilla.exception.EndpointException"
+            } else {
+                console.error(error);
+            }
         }
     };
 
