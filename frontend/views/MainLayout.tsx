@@ -12,7 +12,7 @@ const navLinkClasses = ({ isActive }: any) => {
 };
 
 export default function MainLayout() {
-  const currentTitle = useRouteMetadata()?.title ?? 'My App';
+  const currentTitle = useRouteMetadata()?.title ?? 'Crypto trading';
   useEffect(() => {
     document.title = currentTitle;
   }, [currentTitle]);
@@ -22,16 +22,16 @@ export default function MainLayout() {
     <AppLayout primarySection="drawer">
       <div slot="drawer" className="flex flex-col justify-between h-full p-m">
         <header className="flex flex-col gap-m">
-          <h1 className="text-l m-0">My App</h1>
+          <h1 className="text-l m-0">CryptO Trading</h1>
           <nav>
             {state.user ? (
-              <NavLink className={navLinkClasses} to="/">
-                Hello World
+              <NavLink className={navLinkClasses} to="/home">
+                Trading page
               </NavLink>
             ) : null}
             {state.user ? (
-              <NavLink className={navLinkClasses} to="/about">
-                About
+              <NavLink className={navLinkClasses} to="/account">
+                Account
               </NavLink>
             ) : null}
           </nav>
@@ -40,7 +40,7 @@ export default function MainLayout() {
           {state.user ? (
             <>
               <div className="flex items-center gap-s">
-                {state.user.firstName}
+                {state.user.username}
               </div>
               <Button onClick={async () => logout()}>Sign out</Button>
             </>
