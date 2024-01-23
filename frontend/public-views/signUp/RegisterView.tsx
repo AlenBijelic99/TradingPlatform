@@ -4,11 +4,17 @@ import {UserService} from 'Frontend/generated/endpoints';
 import UserDtoModel from "Frontend/generated/ch/heigvd/application/data/dto/UserDtoModel";
 import {PasswordField} from "@hilla/react-components/PasswordField";
 import {Link, useNavigate} from "react-router-dom";
-import {Button} from "@hilla/react-components/Button.js";
+import {useAuth} from "Frontend/util/auth";
 
 export default function RegisterView() {
-
+    const {state} = useAuth()
     const navigate = useNavigate();
+
+    // If the user is already logged in, redirect to the home page
+    if (state.user) {
+        navigate('/home');
+        return null;
+    }
 
     const redirectToLogin = () => {
         navigate('/login');

@@ -1,6 +1,6 @@
 import {protectRoutes} from '@hilla/react-auth';
 import TradeView from 'Frontend/views/trade/TradeView';
-import LoginView from 'Frontend/views/login/LoginView.js';
+import LoginView from 'Frontend/public-views/login/LoginView.js';
 import MainLayout from 'Frontend/views/MainLayout.js';
 import {lazy} from 'react';
 import {createBrowserRouter, RouteObject, useNavigate} from 'react-router-dom';

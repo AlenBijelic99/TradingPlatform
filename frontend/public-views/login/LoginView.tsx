@@ -1,6 +1,6 @@
 import {Button} from '@hilla/react-components/Button.js';
 import {LoginI18n, LoginOverlay, LoginOverlayElement} from '@hilla/react-components/LoginOverlay.js';
-import {useAuth} from 'Frontend/util/auth.js';
+import {useAuth} from 'Frontend/util/auth';
 import {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 
@@ -10,15 +10,15 @@ const loginI18n: LoginI18n = {
 };
 
 export default function LoginView() {
-    const {login} = useAuth();
+    const {state, login} = useAuth();
     const [hasError, setError] = useState<boolean>();
     const navigate = useNavigate();
 
-    const redirectToRegister = () => {
-        const url = '/register';
-        const path = new URL(url, document.baseURI).pathname;
-        navigate(path)
-    };
+    // If the user is already logged in, redirect to the home page
+    if (state.user) {
+        navigate('/home');
+        return null;
+    }
 
     return (
         <>
