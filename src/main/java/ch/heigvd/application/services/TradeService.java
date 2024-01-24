@@ -6,6 +6,7 @@ import ch.heigvd.application.data.repositories.PriceRepository;
 import ch.heigvd.application.data.repositories.TradeRepository;
 import ch.heigvd.application.security.AuthenticatedUser;
 import dev.hilla.BrowserCallable;
+import dev.hilla.exception.EndpointException;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,7 +84,7 @@ public class TradeService {
      */
     private User getUser() {
         return authenticatedUser.get()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new EndpointException("User not found"));
     }
 
     /**
@@ -93,7 +94,7 @@ public class TradeService {
      */
     private CryptoCurrency getCryptoCurrency(String symbol) {
         return cryptoCurrencyRepository.findBySymbol(symbol)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new EndpointException("Crypto currency not found: " + symbol));
     }
 
     /**
@@ -103,7 +104,7 @@ public class TradeService {
      */
     private Price getPrice(CryptoCurrency cryptoCurrency) {
         return priceRepository.findFirstByCryptoCurrencyOrderByDateDesc(cryptoCurrency)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new EndpointException("Price not found"));
     }
 
     /**
@@ -114,7 +115,7 @@ public class TradeService {
      */
     private void validateFunds(User user, double totalTradePrice, TradeType tradeType) {
         if (tradeType == TradeType.BUY && user.getFunds() - totalTradePrice < 0) {
-            throw new RuntimeException("Not enough funds");
+            throw new EndpointException("Not enough funds");
         }
     }
 
