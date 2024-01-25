@@ -18,9 +18,20 @@ export default function TradeView() {
     const [selectedAction, setSelectedAction] = useState<'Buy' | 'Sell'>('Buy');
     const [tradeAmount, setTradeAmount] = useState<number>(0);
 
-    useEffect(() => {
+    const loadCryptoCurrencies = () => {
         CryptoCurrencyService.getAllWithPrice().then(setCryptoCurrencies);
+    }
+
+    useEffect(() => {
+        loadCryptoCurrencies();
+
+        const interval = setInterval(() => {
+            loadCryptoCurrencies();
+        }, 10000);
+
+        return () => clearInterval(interval);
     }, []);
+
     const resetState = () => {
         // Reset state after successful trade
         setDialogOpened(false);
