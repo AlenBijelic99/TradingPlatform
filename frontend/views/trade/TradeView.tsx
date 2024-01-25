@@ -60,10 +60,8 @@ export default function TradeView() {
         } catch (error) {
             if (error instanceof EndpointError) {
                 Notification.show((error as EndpointError).message, {theme: 'error'});
-                console.warn((error as EndpointError).message); // "Not implemented"
-                console.warn((error as EndpointError).type); // "dev.hilla.exception.EndpointException"
             } else {
-                console.error(error);
+                Notification.show("Unexpected error", {theme: 'error'});
             }
         }
     };

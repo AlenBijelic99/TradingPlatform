@@ -8,6 +8,7 @@ import ch.heigvd.application.security.AuthenticatedUser;
 import dev.hilla.BrowserCallable;
 import dev.hilla.exception.EndpointException;
 import jakarta.annotation.security.RolesAllowed;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ public class TradeService {
      * @param cryptoCurrencyRepository The crypto currency repository
      * @param priceRepository The price repository
      */
+    @Autowired
     public TradeService(TradeRepository tradeRepository, AuthenticatedUser authenticatedUser, CryptoCurrencyRepository cryptoCurrencyRepository, PriceRepository priceRepository) {
         this.tradeRepository = tradeRepository;
         this.authenticatedUser = authenticatedUser;
