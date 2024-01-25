@@ -69,7 +69,7 @@ export default function AccountView() {
                         <span>Username: {state.user?.username}</span>
                         <span>Firstname: {state.user?.firstName}</span>
                         <span>Lastname: {state.user?.lastName}</span>
-                        <span>Firstname: {state.user?.funds}</span>
+                        <span>Funds: {state.user?.funds}</span>
 
                         <Button onClick={() => setEditMode(true)}>Edit</Button>
                     </VerticalLayout>
