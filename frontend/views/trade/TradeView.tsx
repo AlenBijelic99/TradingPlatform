@@ -9,6 +9,7 @@ import {NumberField} from "@hilla/react-components/NumberField";
 import {RadioGroup} from "@hilla/react-components/RadioGroup";
 import {RadioButton} from "@hilla/react-components/RadioButton";
 import {Button} from '@hilla/react-components/Button.js';
+import {EndpointError} from "@hilla/frontend";
 
 export default function TradeView() {
     const [cryptoCurrencies, setCryptoCurrencies] = useState<CryptoCurrency[]>([]);
@@ -21,14 +22,25 @@ export default function TradeView() {
         CryptoCurrencyService.getAllWithPrice().then(setCryptoCurrencies);
     }
 
-    useEffect(() => {
-        if (selectedItem && usdAmound) {
-            const amountInUSD = parseFloat(usdAmound);
+    const handleUsdAmountChange = (e: any) => {
+        const amountInUSD = parseFloat(e.target.value);
+        if (selectedItem && amountInUSD) {
             const cryptoPrice = selectedItem.lastPrice;
             const amountInCrypto = amountInUSD / cryptoPrice;
             setCryptoAmount(amountInCrypto.toFixed(8));
         }
-    }, [selectedItem, usdAmound]);
+        setUsdAmound(e.target.value);
+    };
+
+    const handleCryptoAmountChange = (e: any) => {
+        const amountInCrypto = parseFloat(e.target.value);
+        if (selectedItem && amountInCrypto) {
+            const cryptoPrice = selectedItem.lastPrice;
+            const amountInUSD = cryptoPrice * amountInCrypto;
+            setUsdAmound(amountInUSD.toFixed(2));
+        }
+        setCryptoAmount(e.target.value);
+    };
 
     useEffect(() => {
         loadCryptoCurrencies();
@@ -50,16 +62,22 @@ export default function TradeView() {
     }, [cryptoCurrencies]);
 
 
-    const handleTrade = () => {
-        const amount = parseFloat(usdAmound);
+    const handleTrade = async () => {
+        const amount = parseFloat(cryptoAmount);
         if (selectedItem && selectedItem.symbol && amount > 0) {
             const tradeFunction = tradeAction === 'buy' ? TradeService.buy : TradeService.sell;
-            tradeFunction(selectedItem.symbol, amount)
-                .then(() => {
-                    Notification.show(tradeAction === 'buy' ? 'Achat effectué' : 'Vente effectuée');
-                    setUsdAmound("0");
-                })
-                .catch((error) => Notification.show(`Erreur lors du trade: ${error.message}`));
+            try{
+                await tradeFunction(selectedItem.symbol, amount)
+                Notification.show(tradeAction === 'buy' ? 'Successfully buy trade' : 'Successfully sell trade', {theme: 'success'});
+                setUsdAmound("0");
+                setCryptoAmount("0");
+            } catch (error) {
+                if (error instanceof EndpointError) {
+                    Notification.show(`Error during trade: ${error.message}`, {theme: 'error'});
+                } else {
+                    Notification.show(`Error during trade`, {theme: 'error'});
+                }
+            }
         }
     }
 
@@ -82,9 +100,6 @@ export default function TradeView() {
                         onActiveItemChanged={(e) => {
                             const item = e.detail.value;
                             setSelectedItem(item || null);
-                            if (item) {
-                                //setDialogOpened(true);
-                            }
                         }}
                     >
                         <GridColumn path="name"/>
@@ -101,10 +116,10 @@ export default function TradeView() {
                             </RadioGroup>
                             <HorizontalLayout theme="spacing">
                                 <NumberField label="USD Amount" value={usdAmound.toString()}
-                                             onChange={e => setUsdAmound(e.target.value)}>
+                                             onChange={handleUsdAmountChange}>
                                     <div slot="prefix">$</div>
                                 </NumberField>
-                                <NumberField label={`${selectedItem.symbol} Amount`} value={cryptoAmount} readonly>
+                                <NumberField label={`${selectedItem.symbol} Amount`} value={cryptoAmount} onChange={handleCryptoAmountChange}>
                                     <div slot="prefix">{selectedItem.symbol}</div>
                                 </NumberField>
                             </HorizontalLayout>
