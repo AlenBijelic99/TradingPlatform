@@ -2,8 +2,6 @@ package ch.heigvd.application.services;
 
 import ch.heigvd.application.data.entities.CryptoCurrency;
 import ch.heigvd.application.data.repositories.CryptoCurrencyRepository;
-import ch.heigvd.application.data.entities.Price;
-import ch.heigvd.application.data.repositories.PriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
@@ -19,14 +17,17 @@ import java.util.Map;
 @Service
 public class JmsPriceService {
 
-  @Autowired
-  private PriceRepository priceRepository;
+  private final CryptoCurrencyRepository cryptoCurrencyRepository;
+
+  private final JmsTemplate jmsTemplate;
+
 
   @Autowired
-  private CryptoCurrencyRepository cryptoCurrencyRepository;
+  public JmsPriceService(CryptoCurrencyRepository cryptoCurrencyRepository, JmsTemplate jmsTemplate) {
+    this.cryptoCurrencyRepository = cryptoCurrencyRepository;
+    this.jmsTemplate = jmsTemplate;
+  }
 
-  @Autowired
-  private JmsTemplate jmsTemplate;
 
   /**
    * Send the price of a crypto currency to a queue.
@@ -36,7 +37,6 @@ public class JmsPriceService {
    */
   public void sendPrice(String destination, CryptoCurrency cryptoCurrency, double price) {
     Map<String, Object> priceInfo = new HashMap<>();
-    priceInfo.put("name", cryptoCurrency.getName());
     priceInfo.put("symbol", cryptoCurrency.getSymbol());
     priceInfo.put("price", price);
     jmsTemplate.convertAndSend(destination, priceInfo);
@@ -49,7 +49,6 @@ public class JmsPriceService {
   @JmsListener(destination = "cryptoPriceQueue")
   public void receivePrice(Map<String, Object> priceInfo) {
     // Retrieve price information
-    String name = (String) priceInfo.get("name");
     String symbol = (String) priceInfo.get("symbol");
     double price = (Double) priceInfo.get("price");
 
@@ -61,7 +60,7 @@ public class JmsPriceService {
     }
 
     // Save price
-    Price newPrice = new Price(price, cryptoCurrency);
-    priceRepository.save(newPrice);
+    cryptoCurrency.setLastPrice(price);
+    cryptoCurrencyRepository.save(cryptoCurrency);
   }
 }

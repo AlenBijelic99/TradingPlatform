@@ -4,18 +4,19 @@ import ch.heigvd.application.data.dto.UserDto;
 import ch.heigvd.application.data.entities.Role;
 import ch.heigvd.application.data.entities.User;
 import ch.heigvd.application.data.repositories.UserRepository;
-import java.util.Optional;
-import java.util.Set;
-
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.BrowserCallable;
 import dev.hilla.Nullable;
 import dev.hilla.crud.FormService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.Set;
 
 @BrowserCallable
 @Service
@@ -24,6 +25,7 @@ public class UserService implements FormService<UserDto, Long> {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
     public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.userRepository = repository;
         this.passwordEncoder = passwordEncoder;
