@@ -14,9 +14,12 @@ public class Trade extends AbstractEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "price", nullable = false)
+    private double price;
+
     @ManyToOne(optional = false)
-    @JoinColumn(name = "price_id", nullable = false)
-    private Price price;
+    @JoinColumn(name = "crypto_currency_id", nullable = false)
+    private CryptoCurrency cryptoCurrency;
 
     @Column(name = "quantity", nullable = false)
     private double quantity;
@@ -37,9 +40,10 @@ public class Trade extends AbstractEntity {
      * @param price    Trade price
      * @param quantity Trade quantity
      */
-    public Trade(User user, Price price, double quantity, TradeType type) {
+    public Trade(User user, double price, CryptoCurrency cryptoCurrency, double quantity, TradeType type) {
         this.user = user;
         this.price = price;
+        this.cryptoCurrency = cryptoCurrency;
         this.quantity = quantity;
         this.type = type;
     }
@@ -67,7 +71,7 @@ public class Trade extends AbstractEntity {
      *
      * @return The price of the trade
      */
-    public Price getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -76,8 +80,27 @@ public class Trade extends AbstractEntity {
      *
      * @param price The price of the trade
      */
-    public void setPrice(Price price) {
+    public void setPrice(double price) {
         this.price = price;
+    }
+
+    /**
+     * Get the crypto currency of the trade
+     *
+     * @return The crypto currency of the trade
+     */
+    public CryptoCurrency getCryptoCurrency() {
+        return cryptoCurrency;
+
+    }
+
+    /**
+     * Set the crypto currency of the trade
+     *
+     * @param cryptoCurrency The crypto currency of the trade
+     */
+    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     /**

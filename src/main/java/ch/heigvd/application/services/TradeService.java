@@ -1,8 +1,10 @@
 package ch.heigvd.application.services;
 
-import ch.heigvd.application.data.entities.*;
+import ch.heigvd.application.data.entities.CryptoCurrency;
+import ch.heigvd.application.data.entities.Trade;
+import ch.heigvd.application.data.entities.TradeType;
+import ch.heigvd.application.data.entities.User;
 import ch.heigvd.application.data.repositories.CryptoCurrencyRepository;
-import ch.heigvd.application.data.repositories.PriceRepository;
 import ch.heigvd.application.data.repositories.TradeRepository;
 import ch.heigvd.application.security.AuthenticatedUser;
 import dev.hilla.BrowserCallable;
@@ -24,21 +26,18 @@ public class TradeService {
     private final TradeRepository tradeRepository;
     private final AuthenticatedUser authenticatedUser;
     private final CryptoCurrencyRepository cryptoCurrencyRepository;
-    private final PriceRepository priceRepository;
 
     /**
      * Constructor
      * @param tradeRepository The trade repository
      * @param authenticatedUser The authenticated user
      * @param cryptoCurrencyRepository The crypto currency repository
-     * @param priceRepository The price repository
      */
     @Autowired
-    public TradeService(TradeRepository tradeRepository, AuthenticatedUser authenticatedUser, CryptoCurrencyRepository cryptoCurrencyRepository, PriceRepository priceRepository) {
+    public TradeService(TradeRepository tradeRepository, AuthenticatedUser authenticatedUser, CryptoCurrencyRepository cryptoCurrencyRepository) {
         this.tradeRepository = tradeRepository;
         this.authenticatedUser = authenticatedUser;
         this.cryptoCurrencyRepository = cryptoCurrencyRepository;
-        this.priceRepository = priceRepository;
     }
 
     /**
@@ -70,13 +69,12 @@ public class TradeService {
     private void processTrade(String symbol, double quantity, TradeType tradeType) {
         User user = getUser();
         CryptoCurrency cryptoCurrency = getCryptoCurrency(symbol);
-        Price price = getPrice(cryptoCurrency);
 
-        double totalTradePrice = price.getPrice() * quantity;
+        double totalTradePrice = cryptoCurrency.getLastPrice() * quantity;
         validateFunds(user, totalTradePrice, tradeType);
 
         updateFunds(user, totalTradePrice, tradeType);
-        Trade trade = new Trade(user, price, quantity, tradeType);
+        Trade trade = new Trade(user, cryptoCurrency.getLastPrice(), cryptoCurrency, quantity, tradeType);
         tradeRepository.save(trade);
     }
 
@@ -97,16 +95,6 @@ public class TradeService {
     private CryptoCurrency getCryptoCurrency(String symbol) {
         return cryptoCurrencyRepository.findBySymbol(symbol)
                 .orElseThrow(() -> new EndpointException("Crypto currency not found: " + symbol));
-    }
-
-    /**
-     * Get the price of the crypto currency
-     * @param cryptoCurrency The crypto currency
-     * @return The price of the crypto currency
-     */
-    private Price getPrice(CryptoCurrency cryptoCurrency) {
-        return priceRepository.findFirstByCryptoCurrencyOrderByDateDesc(cryptoCurrency)
-                .orElseThrow(() -> new EndpointException("Price not found"));
     }
 
     /**

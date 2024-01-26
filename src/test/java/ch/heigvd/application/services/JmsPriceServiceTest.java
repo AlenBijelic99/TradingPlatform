@@ -1,9 +1,7 @@
 package ch.heigvd.application.services;
 
 import ch.heigvd.application.data.entities.CryptoCurrency;
-import ch.heigvd.application.data.entities.Price;
 import ch.heigvd.application.data.repositories.CryptoCurrencyRepository;
-import ch.heigvd.application.data.repositories.PriceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,9 +16,6 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 public class JmsPriceServiceTest {
-
-  @Mock
-  private PriceRepository priceRepository;
 
   @Mock
   private CryptoCurrencyRepository cryptoCurrencyRepository;
@@ -48,7 +43,7 @@ public class JmsPriceServiceTest {
     // Call the method to test
     jmsPriceService.receivePrice(priceInfo);
 
-    // Verify that the save method of priceRepository is called
-    verify(priceRepository).save(any(Price.class));
+    // Verify that the price is saved
+    verify(cryptoCurrencyRepository, times(1)).save(any(CryptoCurrency.class));
   }
 }

@@ -2,9 +2,8 @@ package ch.heigvd.application.services;
 
 import ch.heigvd.application.data.entities.CryptoCurrency;
 import ch.heigvd.application.data.repositories.CryptoCurrencyRepository;
-import ch.heigvd.application.data.entities.Price;
-import ch.heigvd.application.data.repositories.PriceRepository;
 import dev.hilla.BrowserCallable;
+import dev.hilla.exception.EndpointException;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,48 +14,26 @@ import java.util.List;
 @RolesAllowed("USER")
 @Service
 public class CryptoCurrencyService {
-    @Autowired
-    private final CryptoCurrencyRepository cryptoCurrencyRepository;
+  private final CryptoCurrencyRepository cryptoCurrencyRepository;
 
-    @Autowired
-    private final PriceRepository priceRepository;
+  @Autowired
+  public CryptoCurrencyService(CryptoCurrencyRepository cryptoCurrencyRepository) {
+    this.cryptoCurrencyRepository = cryptoCurrencyRepository;
+  }
 
-    public CryptoCurrencyService(CryptoCurrencyRepository cryptoCurrencyRepository, PriceRepository priceRepository) {
-        this.cryptoCurrencyRepository = cryptoCurrencyRepository;
-        this.priceRepository = priceRepository;
+  public List<CryptoCurrency> getAll() {
+    return cryptoCurrencyRepository.findAll();
+  }
+
+  public List<CryptoCurrency> getAllWithPrice() {
+    return cryptoCurrencyRepository.findAll();
+  }
+
+  public CryptoCurrency getOne(String symbol) throws RuntimeException {
+    CryptoCurrency cryptoCurrency = cryptoCurrencyRepository.findBySymbol(symbol).orElse(null);
+    if (cryptoCurrency == null) {
+      throw new EndpointException("CryptoCurrency not found");
     }
-
-    public record CryptoCurrencyRecord(
-            String name,
-            String symbol,
-            double price
-    ) {
-    }
-
-    private CryptoCurrencyRecord toCompanyRecord(CryptoCurrency cryptoCurrency) {
-        Price lastPrice = priceRepository.findFirstByCryptoCurrencyOrderByDateDesc(cryptoCurrency).orElse(null);
-
-        return new CryptoCurrencyRecord(
-                cryptoCurrency.getName(),
-                cryptoCurrency.getSymbol(),
-                lastPrice != null ? lastPrice.getPrice() : 0
-        );
-    }
-
-    public List<CryptoCurrency> getAll() {
-        return cryptoCurrencyRepository.findAll();
-    }
-
-    public List<CryptoCurrencyRecord> getAllWithPrice() {
-        return cryptoCurrencyRepository.findAll().stream()
-                .map(this::toCompanyRecord).toList();
-    }
-
-    public CryptoCurrencyRecord getOneWithPrice(String symbol) throws RuntimeException {
-        CryptoCurrency cryptoCurrency = cryptoCurrencyRepository.findBySymbol(symbol).orElse(null);
-        if (cryptoCurrency == null) {
-           throw new RuntimeException("CryptoCurrency not found");
-        }
-        return toCompanyRecord(cryptoCurrency);
-    }
+    return cryptoCurrency;
+  }
 }
