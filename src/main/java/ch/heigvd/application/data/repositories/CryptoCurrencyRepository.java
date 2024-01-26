@@ -4,6 +4,7 @@ import ch.heigvd.application.data.entities.CryptoCurrency;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -28,4 +29,10 @@ public interface CryptoCurrencyRepository extends JpaRepository<CryptoCurrency, 
    * @return The CryptoCurrency if found.
    */
   Optional<CryptoCurrency> findBySymbol(String symbol);
+
+  /**
+   * This method is used to find all CryptoCurrency ordered by id ASC.
+   * @return The list of CryptoCurrency if found
+   */
+  List<CryptoCurrency> findAllByOrderByIdAsc();
 }

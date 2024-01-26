@@ -129,13 +129,17 @@ public class PriceFetchService {
    */
   public void fetchPrice(CryptoCurrency cryptoCurrency) {
     String url = "https://api.coinbase.com/v2/prices/" + cryptoCurrency.getSymbol() + "-USD/spot";
-    ResponseEntity<ApiResponse> response = restTemplate.getForEntity(url, ApiResponse.class);
+    try{
+      ResponseEntity<ApiResponse> response = restTemplate.getForEntity(url, ApiResponse.class);
 
-    ApiResponse apiResponse = response.getBody();
-    if (apiResponse != null) {
-      PriceData priceData = apiResponse.getData();
-      double priceAmmount = Double.parseDouble(priceData.getAmount());
-      jmsPriceService.sendPrice("cryptoPriceQueue", cryptoCurrency, priceAmmount);
+      ApiResponse apiResponse = response.getBody();
+      if (apiResponse != null) {
+        PriceData priceData = apiResponse.getData();
+        double priceAmmount = Double.parseDouble(priceData.getAmount());
+        jmsPriceService.sendPrice("cryptoPriceQueue", cryptoCurrency, priceAmmount);
+      }
+    }catch(Exception e){
+      System.out.println("Could not fetch price for " + cryptoCurrency.getSymbol() + " : " + e.getMessage());
     }
   }
 }

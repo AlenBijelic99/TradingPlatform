@@ -1,5 +1,6 @@
 package ch.heigvd.application.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 /**
@@ -17,6 +18,7 @@ public class Trade extends AbstractEntity {
     @Column(name = "price", nullable = false)
     private double price;
 
+    @JsonBackReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "crypto_currency_id", nullable = false)
     private CryptoCurrency cryptoCurrency;

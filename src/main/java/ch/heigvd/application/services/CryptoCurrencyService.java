@@ -26,12 +26,13 @@ public class CryptoCurrencyService {
   }
 
   public List<CryptoCurrency> getAllWithPrice() {
-    return cryptoCurrencyRepository.findAll();
+    return cryptoCurrencyRepository.findAllByOrderByIdAsc();
   }
 
   public CryptoCurrency getOne(String symbol) throws RuntimeException {
     CryptoCurrency cryptoCurrency = cryptoCurrencyRepository.findBySymbol(symbol).orElse(null);
     if (cryptoCurrency == null) {
+      System.err.println("Crypto currency " + symbol + " doesn't exist in database");
       throw new EndpointException("CryptoCurrency not found");
     }
     return cryptoCurrency;
