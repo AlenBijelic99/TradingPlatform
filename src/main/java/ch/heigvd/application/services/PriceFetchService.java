@@ -7,21 +7,22 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * This class is used to get the price of a crypto currency from an external API.
- * @author Alen Bijelic, Tegest Bogale
- */
 @Service
-public class CryptoPriceService {
+public class PriceFetchService {
+
+  private final RestTemplate restTemplate;
+
+  private final JmsPriceService jmsPriceService;
+
+  private final CryptoCurrencyService cryptoCurrencyService;
 
   @Autowired
-  private CryptoCurrencyService cryptoCurrencyService;
+  public PriceFetchService(RestTemplate restTemplate, JmsPriceService jmsPriceService, CryptoCurrencyService cryptoCurrencyService) {
+    this.restTemplate = restTemplate;
+    this.jmsPriceService = jmsPriceService;
+    this.cryptoCurrencyService = cryptoCurrencyService;
+  }
 
-  @Autowired
-  private RestTemplate restTemplate;
-
-  @Autowired
-  private JmsPriceService jmsPriceService;
 
   /**
    * This class represent the price data given by the API.
@@ -33,6 +34,7 @@ public class CryptoPriceService {
 
     /**
      * Get the amount of the price.
+     *
      * @return The amount of the price
      */
     public String getAmount() {
@@ -41,6 +43,7 @@ public class CryptoPriceService {
 
     /**
      * Set the amount of the price.
+     *
      * @param amount The amount of the price
      */
     public void setAmount(String amount) {
@@ -49,6 +52,7 @@ public class CryptoPriceService {
 
     /**
      * Get the base of the price.
+     *
      * @return The base of the price
      */
     public String getBase() {
@@ -57,6 +61,7 @@ public class CryptoPriceService {
 
     /**
      * Set the base of the price.
+     *
      * @param base The base of the price
      */
     public void setBase(String base) {
@@ -65,6 +70,7 @@ public class CryptoPriceService {
 
     /**
      * Get the currency of the price.
+     *
      * @return The currency of the price
      */
     public String getCurrency() {
@@ -73,6 +79,7 @@ public class CryptoPriceService {
 
     /**
      * Set the currency of the price.
+     *
      * @param currency The currency of the price
      */
     public void setCurrency(String currency) {
@@ -88,6 +95,7 @@ public class CryptoPriceService {
 
     /**
      * Get the price data.
+     *
      * @return The price data
      */
     public PriceData getData() {
@@ -96,6 +104,7 @@ public class CryptoPriceService {
 
     /**
      * Set the price data.
+     *
      * @param data The price data
      */
     public void setData(PriceData data) {
@@ -115,6 +124,7 @@ public class CryptoPriceService {
 
   /**
    * Fetch the price of a crypto currency.
+   *
    * @param cryptoCurrency The crypto currency
    */
   public void fetchPrice(CryptoCurrency cryptoCurrency) {

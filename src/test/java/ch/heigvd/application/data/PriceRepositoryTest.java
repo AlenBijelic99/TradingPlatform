@@ -1,9 +1,7 @@
 package ch.heigvd.application.data;
 
 import ch.heigvd.application.data.entities.CryptoCurrency;
-import ch.heigvd.application.data.entities.Price;
 import ch.heigvd.application.data.repositories.CryptoCurrencyRepository;
-import ch.heigvd.application.data.repositories.PriceRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,8 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PriceRepositoryTest {
-    @Autowired
-    private PriceRepository priceRepository;
 
     @Autowired
     private CryptoCurrencyRepository cryptoCurrencyRepository;
@@ -44,13 +40,13 @@ public class PriceRepositoryTest {
      */
     @Test
     public void testSavePrice() {
-        Price price = new Price(100.0, cryptoCurrency);
-        priceRepository.save(price);
+        // Save price
+        cryptoCurrency.setLastPrice(10000);
+        cryptoCurrencyRepository.save(cryptoCurrency);
 
-        Price retrievedPrice = priceRepository.findById(price.getId()).orElse(null);
-        assertNotNull(retrievedPrice);
-        assertNotNull(retrievedPrice.getPrice());
-        assertNotNull(retrievedPrice.getDate());
-        assertEquals(retrievedPrice.getPrice(), price.getPrice());
+        // Retrieve price
+        CryptoCurrency cryptoCurrency = cryptoCurrencyRepository.findBySymbol("BTC").orElse(null);
+        assertNotNull(cryptoCurrency);
+        assertEquals(10000, cryptoCurrency.getLastPrice());
     }
 }

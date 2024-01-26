@@ -26,7 +26,7 @@ public class CryptoPriceServiceTest {
   private JmsPriceService jmsPriceService;
 
   @InjectMocks
-  private CryptoPriceService cryptoPriceService;
+  private PriceFetchService priceFetchService;
 
   @BeforeEach
   public void setup() {
@@ -43,19 +43,19 @@ public class CryptoPriceServiceTest {
     when(cryptoCurrencyService.getAll()).thenReturn(Arrays.asList(bitcoin, ethereum));
 
     // Create an API-like response with a price
-    CryptoPriceService.ApiResponse apiResponse = new CryptoPriceService.ApiResponse();
-    CryptoPriceService.PriceData priceData = new CryptoPriceService.PriceData();
+    PriceFetchService.ApiResponse apiResponse = new PriceFetchService.ApiResponse();
+    PriceFetchService.PriceData priceData = new PriceFetchService.PriceData();
     priceData.setAmount("50000");
     priceData.setBase("BTC");
     priceData.setCurrency("USD");
     apiResponse.setData(priceData);
 
     // Mock restTemplate.getForEntity() to return a response with a price
-    when(restTemplate.getForEntity(anyString(), eq(CryptoPriceService.ApiResponse.class)))
+    when(restTemplate.getForEntity(anyString(), eq(PriceFetchService.ApiResponse.class)))
             .thenReturn(ResponseEntity.ok(apiResponse));
 
     // Call the method to test
-    cryptoPriceService.schedulePriceFetch();
+    priceFetchService.schedulePriceFetch();
 
     // Verify that the sendPrice() method of jmsPriceService is called twice
     verify(jmsPriceService, times(2)).sendPrice(eq("cryptoPriceQueue"), any(CryptoCurrency.class), anyDouble());
