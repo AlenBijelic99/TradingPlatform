@@ -1,5 +1,6 @@
 package ch.heigvd.application.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -22,6 +23,7 @@ public class CryptoCurrency extends AbstractEntity {
     @Column(name = "last_price", nullable = false)
     private double lastPrice;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "cryptoCurrency")
     private Set<Trade> trades;
 

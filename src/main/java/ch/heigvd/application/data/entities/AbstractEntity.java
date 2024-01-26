@@ -2,8 +2,10 @@ package ch.heigvd.application.data.entities;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @MappedSuperclass
-public abstract class AbstractEntity {
+public abstract class AbstractEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgenerator")
