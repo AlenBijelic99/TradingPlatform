@@ -11,6 +11,7 @@ import {CryptoCurrencyService, UserEndpoint, UserService} from 'Frontend/generat
 import User from 'Frontend/generated/ch/heigvd/application/data/entities/User';
 import {ChartSeries} from "@hilla/react-components/ChartSeries";
 import {Chart} from "@hilla/react-components/Chart";
+import {Avatar} from "@hilla/react-components/Avatar";
 
 export default function AccountView() {
     let [currentUser, setCurrentUser] = useState<User>();
@@ -62,7 +63,7 @@ export default function AccountView() {
                 ) : (
                     // Render read-only view
                     <VerticalLayout>
-                        <img style={{width: '200px'}} src="images/empty-plant.png" alt="Profile"/>
+                        <Avatar name={`${currentUser?.firstName} ${currentUser?.lastName}`} />
                         <span>Username: {currentUser?.username}</span>
                         <span>Firstname: {currentUser?.firstName}</span>
                         <span>Lastname: {currentUser?.lastName}</span>
