@@ -7,18 +7,26 @@ import {TextField} from '@hilla/react-components/TextField';
 import {Button} from '@hilla/react-components/Button.js';
 import {useForm} from '@hilla/react-form';
 import UserModel from 'Frontend/generated/ch/heigvd/application/data/entities/UserModel';
-import {UserEndpoint, UserService} from 'Frontend/generated/endpoints';
+import {CryptoCurrencyService, UserEndpoint, UserService} from 'Frontend/generated/endpoints';
 import User from 'Frontend/generated/ch/heigvd/application/data/entities/User';
+import {ChartSeries} from "@hilla/react-components/ChartSeries";
+import {Chart} from "@hilla/react-components/Chart";
 
 export default function AccountView() {
     let [currentUser, setCurrentUser] = useState<User>();
     const [editMode, setEditMode] = useState(false);
     const {field, model, submit} = useForm(UserModel, {onSubmit}); // Define a form using the useForm hook
-
+    const[cryptoData, setCryptoData] = useState<any[]>(); //TODO : fix this once the backend is done
     useEffect(() => {
         UserEndpoint.getAuthenticatedUser().then((user) => {
             setCurrentUser(user);
         });
+
+        // Fetch cryptocurrencies data from the backend for the current user
+        // TODO implement getOwnedCryptoCurrencies in the backend
+       /* CryptoCurrencyService.getOwnedCryptoCurrencies().then((cryptoData) => {
+            setCryptoData(cryptoData);
+        });*/
     }, []);
 
     async function onSubmit(updatedUser: User) {
@@ -65,6 +73,12 @@ export default function AccountView() {
                 )}
             </AccordionPanel>
             <AccordionPanel summary="Current crypto chart ">
+                <Chart type="pie" title="Owned Cryptos" tooltip>
+                    <ChartSeries
+                        title="Cryptos"
+                        values={cryptoData?.map((crypto) => crypto.amount)}
+                    />
+                </Chart>
             </AccordionPanel>
         </Accordion>
     );
