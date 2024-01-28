@@ -202,8 +202,8 @@ export default function AccountView() {
                         values={ownedCryptos?.map((ownedCrypto) => {
                             const symbol = ownedCrypto.cryptoCurrency?.symbol;
                             const quantity = ownedCrypto.quantity || 0;
-                            // Get the current exchange rate or price for the cryptocurrency in USD //TODO change with usd value
-                            const cryptoPriceInUSD = ownedCrypto.cryptoCurrency?.lastPrice || 10000;
+                            // Get the current exchange rate or price for the cryptocurrency in USD
+                            const cryptoPriceInUSD = ownedCrypto.cryptoCurrency?.lastPrice || 0;
                             // Calculate the current value in USD based on historical trades
                             const currentValueUSD = calculateCurrentValue(symbol, quantity, myTrades) * cryptoPriceInUSD;
                             return {
