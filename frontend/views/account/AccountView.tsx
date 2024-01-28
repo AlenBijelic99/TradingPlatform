@@ -153,7 +153,25 @@ export default function AccountView() {
      * @param trade the trade to render the date for
      */
     const tradeDateRenderer = (trade: Trade) => {
-        return <span>{trade?.date || '-'}</span>;
+        if (!trade?.date) {
+            return <span>-</span>;
+        }
+
+        const dateObject = new Date(trade.date);
+
+        const options: Intl.DateTimeFormatOptions = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            timeZoneName: "short",
+        };
+
+        const formattedDate = new Intl.DateTimeFormat("en-US", options).format(dateObject);
+
+        return <span>{formattedDate}</span>;
     };
 
     return (
@@ -166,7 +184,7 @@ export default function AccountView() {
                         label="Fund"
                         helperText="Add/withdrow"
                         min={0}
-                        max={10000000}
+                        max={1000000}
                         value={fundValue.toString()}
                         stepButtonsVisible
                         onChange={(e) => handleFundChange(e)}
@@ -177,20 +195,20 @@ export default function AccountView() {
             <AccordionPanel summary="History of trades">
                 <Grid items={myTrades} allRowsVisible ref={gridRef}>
                     <GridColumn
-                        header="Trade Type" flexGrow={0} autoWidth>
+                        header="Trade Type" flexGrow={0} autoWidth={true}>
                         {({item}) => tradeTypeRenderer(item)}
                     </GridColumn>
                     <GridColumn
-                        header="Crypto Symbol" flexGrow={0} autoWidth>
+                        header="Crypto Symbol" flexGrow={0} autoWidth={true}>
                         {({item}) => tradeSymboleRenderer(item)}
                     </GridColumn>
-                    <GridColumn path="quantity" flexGrow={0} autoWidth/>
+                    <GridColumn path="quantity" flexGrow={0} autoWidth={true}/>
                     <GridColumn
-                        header="Trade Price" flexGrow={0} autoWidth>
+                        header="Trade Price" flexGrow={0} autoWidth={true}>
                         {({item}) => tradePriceRenderer(item)}
                     </GridColumn>
                     <GridColumn
-                        header="date" flexGrow={0} autoWidth>
+                        header="date" flexGrow={0} autoWidth={true}>
                         {({item}) => tradeDateRenderer(item)}
                     </GridColumn>
                 </Grid>
