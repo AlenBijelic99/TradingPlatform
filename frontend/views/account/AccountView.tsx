@@ -2,10 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Accordion} from '@hilla/react-components/Accordion.js';
 import {AccordionPanel} from '@hilla/react-components/AccordionPanel.js';
 import {VerticalLayout} from '@hilla/react-components/VerticalLayout';
-import {TextField} from '@hilla/react-components/TextField';
 import {Button} from '@hilla/react-components/Button.js';
-import {useForm} from '@hilla/react-form';
-import UserModel from 'Frontend/generated/ch/heigvd/application/data/entities/UserModel';
 import {TradeService, UserEndpoint, UserService} from 'Frontend/generated/endpoints';
 import User from 'Frontend/generated/ch/heigvd/application/data/entities/User';
 import {ChartSeries} from "@hilla/react-components/ChartSeries";
@@ -18,27 +15,10 @@ import TradeType from "Frontend/generated/ch/heigvd/application/data/entities/Tr
 import CryptoHoldingDto from "Frontend/generated/ch/heigvd/application/data/dto/CryptoHoldingDto";
 import {IntegerField, IntegerFieldChangeEvent} from "@hilla/react-components/IntegerField";
 import {useAuth} from "Frontend/util/auth";
-import user from "Frontend/generated/ch/heigvd/application/data/entities/User";
+import {Notification} from '@hilla/react-components/Notification.js';
+import {EndpointError} from "@hilla/frontend";
 
-
-const tradeTypeRenderer = (trade: Trade) => {
-    return <span>
-        {trade?.type ? trade?.type === TradeType.BUY ? "BUY" : "SELL" : "-"}
-    </span>
-
-};
-const tradeSymboleRenderer = (trade: Trade) => {
-    return <span>{trade?.cryptoCurrency?.symbol || '-'}</span>;
-
-};
-const tradePriceRenderer = (trade: Trade) => {
-    return <span>{trade?.price || '-'}</span>;
-};
-
-const tradeDateRenderer = (trade: Trade) => {
-    return <span>{trade?.date || '-'}</span>;
-};
-export default function AccountView (){
+export default function AccountView() {
     const gridRef = React.useRef<any>(null);
     const [currentUser, setCurrentUser] = useState<User>();
     const [ownedCryptos, setOwnedCryptos] = useState<CryptoHoldingDto[]>();
@@ -85,8 +65,14 @@ export default function AccountView (){
             UserService.updateFund(
                 currentUser?.id || 0,
                 updatedFund
-            )
-        };
+            ).then(r => {
+                // Display a success notification
+                Notification.show(`Successfully updated fund to ${updatedFund}`);
+            }).catch((error: EndpointError) => {
+                // Display an error notification
+                Notification.show(`Error during fund update: ${error.message}`, {theme: 'error'});
+            });
+        }
     }
     const handleFundChange = (e: IntegerFieldChangeEvent) => {
         setFundValue(parseInt(e.target.value));
@@ -116,6 +102,23 @@ export default function AccountView (){
         return currentValue;
     }
 
+    const tradeTypeRenderer = (trade: Trade) => {
+        return <span>
+        {trade?.type ? trade?.type === TradeType.BUY ? "BUY" : "SELL" : "-"}
+    </span>
+
+    };
+    const tradeSymboleRenderer = (trade: Trade) => {
+        return <span>{trade?.cryptoCurrency?.symbol || '-'}</span>;
+
+    };
+    const tradePriceRenderer = (trade: Trade) => {
+        return <span>{trade?.price || '-'}</span>;
+    };
+
+    const tradeDateRenderer = (trade: Trade) => {
+        return <span>{trade?.date || '-'}</span>;
+    };
 
     return (
         <Accordion>
