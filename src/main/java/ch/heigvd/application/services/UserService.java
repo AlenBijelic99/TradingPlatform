@@ -8,6 +8,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.BrowserCallable;
 import dev.hilla.Nullable;
 import dev.hilla.crud.FormService;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -76,6 +77,21 @@ public class UserService implements FormService<UserDto, Long> {
 
     public int count() {
         return (int) userRepository.count();
+    }
+
+    /**
+     * Update the funds of a user with the given id
+     * @param userId the id of the user
+     * @param newFund the new amount of funds
+     * @RolesAllowed to ensure that only a user can update his own funds
+     */
+    @RolesAllowed("User")
+    public void updateFund(Long userId, double newFund) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        optionalUser.ifPresent(user -> {
+            user.setFunds(newFund);
+            userRepository.save(user);
+        });
     }
 
 }

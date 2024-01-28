@@ -7,6 +7,13 @@ import { useRouteMetadata } from 'Frontend/util/routing.js';
 import { Suspense, useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 
+/**
+ * The main layout. This layout is used for all views once the user is logged in.
+ * It displays a navigation drawer and a navbar.
+ * @param isActive - Whether the link is active
+ * @Author Bijelic Alen & Bogale Tegest
+ * @Date 28.01.2024
+ */
 const navLinkClasses = ({ isActive }: any) => {
   return `block rounded-m p-s ${isActive ? 'bg-primary-10 text-primary' : 'text-body'}`;
 };

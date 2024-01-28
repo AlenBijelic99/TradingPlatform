@@ -1,4 +1,3 @@
-import {Button} from '@hilla/react-components/Button.js';
 import {LoginI18n, LoginOverlay, LoginOverlayElement} from '@hilla/react-components/LoginOverlay.js';
 import {useAuth} from 'Frontend/util/auth';
 import {useState} from 'react';
@@ -9,6 +8,13 @@ const loginI18n: LoginI18n = {
     header: {title: 'Crypto-trading', description: 'Sign in to your account'},
 };
 
+/**
+ * The login view. This view is displayed when the user navigates to the /login route.
+ * It displays a login form and a link to the register view.
+ * @constructor
+ * @Author Bijelic Alen & Bogale Tegest
+ * @Date 28.01.2024
+ */
 export default function LoginView() {
     const {state, login} = useAuth();
     const [hasError, setError] = useState<boolean>();
