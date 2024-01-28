@@ -77,5 +77,12 @@ public class UserService implements FormService<UserDto, Long> {
     public int count() {
         return (int) userRepository.count();
     }
+    public void updateFund(Long userId, double newFund) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        optionalUser.ifPresent(user -> {
+            user.setFunds(newFund);
+            userRepository.save(user);
+        });
+    }
 
 }
