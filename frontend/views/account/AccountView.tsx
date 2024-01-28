@@ -18,6 +18,13 @@ import {useAuth} from "Frontend/util/auth";
 import {Notification} from '@hilla/react-components/Notification.js';
 import {EndpointError} from "@hilla/frontend";
 
+/**
+ * The account view. This view is displayed when the user navigates to the /account route.
+ * It displays the current user's account information such as funds, owned cryptocurrencies chart and trade history.
+ * @constructor
+ * @Author Bijelic Alen & Bogale Tegest
+ * @Date 28.01.2024
+ */
 export default function AccountView() {
     const gridRef = React.useRef<any>(null);
     const [currentUser, setCurrentUser] = useState<User>();
@@ -31,13 +38,14 @@ export default function AccountView() {
             setCurrentUser(user);
         });
 
-        // Fetch cryptocurrencies data from the backend for the current user
+        // Load the owned cryptocurrencies
         TradeService.getCryptoHoldings().then((ownedCrypto) => {
             setOwnedCryptos(ownedCrypto);
         });
 
     }, []);
     useEffect(() => {
+        // Load the trade history for the current user
         TradeService.getTrades().then((trades) => {
             setMyTrades(trades);
         });
@@ -49,16 +57,19 @@ export default function AccountView() {
     }, []);
 
     useEffect(() => {
-        // Check if currentUser has been updated and trigger any actions accordingly
         if (currentUser) {
-            // Perform any actions based on the updated currentUser
+            setFundValue(currentUser.funds);
         }
     }, [currentUser]);
+
+    /**
+     * Handle the fund update when the user clicks on the update button.
+     *
+     */
     const handleFundUpdate = () => {
         if (currentUser) {
             const updatedFund = currentUser.funds + fundValue;
 
-            // Update the fund value in the component state
             setCurrentUser({...currentUser, funds: updatedFund});
 
             // Update the fund value using the UserService
@@ -74,14 +85,23 @@ export default function AccountView() {
             });
         }
     }
+
+    /**
+     * Handle the fund change when the user changes the fund value.
+     * @param e the event
+     */
     const handleFundChange = (e: IntegerFieldChangeEvent) => {
         setFundValue(parseInt(e.target.value));
     };
 
+    /**
+     * Calculate the current value of the cryptocurrency based on the historical trades.
+     * @param symbol the symbol of the cryptocurrency
+     * @param quantity the quantity of the cryptocurrency
+     * @param trades the historical trades
+     */
     function calculateCurrentValue(symbol: string | undefined, quantity: number, trades: Trade[] | undefined): number {
         if (!symbol || !trades) {
-            //TODO remove at the end
-            console.error('Symbol or trades not defined');
             return 0;
         }
 
@@ -102,20 +122,36 @@ export default function AccountView() {
         return currentValue;
     }
 
+    /**
+     * Render the trade type.
+     * @param trade the trade to render the type for
+     */
     const tradeTypeRenderer = (trade: Trade) => {
         return <span>
         {trade?.type ? trade?.type === TradeType.BUY ? "BUY" : "SELL" : "-"}
     </span>
 
     };
+    /**
+     * Render the trade symbol. (e.g. BTC for Bitcoin)
+     * @param trade the trade to render the symbol for
+     */
     const tradeSymboleRenderer = (trade: Trade) => {
         return <span>{trade?.cryptoCurrency?.symbol || '-'}</span>;
 
     };
+    /**
+     * Render the trade price.
+     * @param trade the trade to render the price for
+     */
     const tradePriceRenderer = (trade: Trade) => {
         return <span>{trade?.price || '-'}</span>;
     };
 
+    /**
+     * Render the trade date.
+     * @param trade the trade to render the date for
+     */
     const tradeDateRenderer = (trade: Trade) => {
         return <span>{trade?.date || '-'}</span>;
     };
@@ -166,15 +202,10 @@ export default function AccountView() {
                         values={ownedCryptos?.map((ownedCrypto) => {
                             const symbol = ownedCrypto.cryptoCurrency?.symbol;
                             const quantity = ownedCrypto.quantity || 0;
-
                             // Get the current exchange rate or price for the cryptocurrency in USD //TODO change with usd value
                             const cryptoPriceInUSD = ownedCrypto.cryptoCurrency?.lastPrice || 10000;
-
                             // Calculate the current value in USD based on historical trades
                             const currentValueUSD = calculateCurrentValue(symbol, quantity, myTrades) * cryptoPriceInUSD;
-
-                            console.log('Chart Data:', {name: symbol, y: currentValueUSD}); // tODO remove at the end Log the data
-
                             return {
                                 name: symbol,
                                 y: currentValueUSD,
