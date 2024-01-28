@@ -78,6 +78,36 @@ export default function AccountView() {
             console.error('Error during update:', error);
         }
     }
+    function calculateCurrentValue(symbol: string | undefined,  trades: Trade[] | undefined): number {
+        if (!symbol || !trades) {
+            //TODO remove at the end
+            console.error('Symbol or trades not defined');
+            return 0;
+        }
+
+        // Filter trades for the given symbol
+        const symbolTrades = trades.filter((trade) => trade.cryptoCurrency?.symbol === symbol);
+
+        // Calculate the current value based on buy and sell trades
+        let currentValue = symbolTrades.reduce((totalValue, trade) => {
+            if (trade.type === TradeType.BUY) {
+                totalValue += trade.price * trade.quantity;
+            } else if (trade.type === TradeType.SELL) {
+                totalValue -= trade.price * trade.quantity;
+            }
+            return totalValue  ;
+        }, 0);
+
+        return currentValue;
+    }
+    function getTradePrice(trade: Trade): number {
+        if (trade.type === TradeType.BUY) {
+            return trade.price;
+        } else if (trade.type === TradeType.SELL) {
+            return -trade.price;
+        }
+        return 0;
+    }
 
 
     return (
@@ -134,22 +164,29 @@ export default function AccountView() {
             </AccordionPanel>
             <AccordionPanel summary="Crypto chart ">
                 <Chart type="pie" title="Owned Cryptos" tooltip>
-
                     <ChartSeries
                         title="Cryptos"
                         values={ownedCryptos?.map((ownedCrypto) => {
-                            let cryptoPrice = ownedCrypto.cryptoCurrency?.lastPrice;
-                            let owned = ownedCrypto.quantity ? ownedCrypto.quantity : 0;
-                            let amountInUSD = cryptoPrice ? cryptoPrice * owned : 0;
+                            const symbol = ownedCrypto.cryptoCurrency?.symbol;
+
+                            // Get the current exchange rate or price for the cryptocurrency in USD //TODO change with usd value
+                            const cryptoPriceInUSD = ownedCrypto.cryptoCurrency?.lastPrice || 10000;
+
+                            // Calculate the current value in USD based on historical trades
+                            const currentValueUSD = calculateCurrentValue(symbol,  myTrades) * cryptoPriceInUSD ;
+
+                            console.log('Chart Data:', { name: symbol, y: currentValueUSD }); // tODO remove at the end Log the data
+
                             return {
-                                name: ownedCrypto.cryptoCurrency?.symbol,
-                                value: amountInUSD
-                            }
+                                name: symbol,
+                                y: currentValueUSD,
+                            };
                         })}
                     />
-
                 </Chart>
+
             </AccordionPanel>
+
         </Accordion>
     );
 }
