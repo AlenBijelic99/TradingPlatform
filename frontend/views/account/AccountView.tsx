@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import {useAuth} from 'Frontend/util/auth';
 import {Accordion} from '@hilla/react-components/Accordion.js';
 import {AccordionPanel} from '@hilla/react-components/AccordionPanel.js';
 import {VerticalLayout} from '@hilla/react-components/VerticalLayout';
@@ -7,23 +6,43 @@ import {TextField} from '@hilla/react-components/TextField';
 import {Button} from '@hilla/react-components/Button.js';
 import {useForm} from '@hilla/react-form';
 import UserModel from 'Frontend/generated/ch/heigvd/application/data/entities/UserModel';
-import {CryptoCurrencyService, TradeService, UserEndpoint, UserService} from 'Frontend/generated/endpoints';
+import {TradeService, UserEndpoint, UserService} from 'Frontend/generated/endpoints';
 import User from 'Frontend/generated/ch/heigvd/application/data/entities/User';
 import {ChartSeries} from "@hilla/react-components/ChartSeries";
 import {Chart} from "@hilla/react-components/Chart";
 import {Avatar} from "@hilla/react-components/Avatar";
-import CryptoHoldingDto from "Frontend/generated/ch/heigvd/application/data/dto/CryptoHoldingDto";
 import {Grid} from "@hilla/react-components/Grid";
 import {GridColumn} from "@hilla/react-components/GridColumn";
 import Trade from "Frontend/generated/ch/heigvd/application/data/entities/Trade";
+import TradeType from "Frontend/generated/ch/heigvd/application/data/entities/TradeType";
+import CryptoHoldingDto from "Frontend/generated/ch/heigvd/application/data/dto/CryptoHoldingDto";
 
+
+const tradeTypeRenderer = (trade: Trade) => {
+    return <span>
+        {trade?.type ? trade?.type === TradeType.BUY ? "BUY" : "SELL" : "-"}
+    </span>
+
+};
+const tradeSymboleRenderer = (trade: Trade) => {
+    return <span>{trade?.cryptoCurrency?.symbol || '-'}</span>;
+
+};
+const tradePriceRenderer = (trade: Trade) => {
+    return <span>{trade?.price || '-'}</span>;
+};
+
+const tradeDateRenderer = (trade: Trade) => {
+    return <span>{trade?.date || '-'}</span>;
+};
 export default function AccountView() {
+    const gridRef = React.useRef<any>(null);
     let [currentUser, setCurrentUser] = useState<User>();
     const [editMode, setEditMode] = useState(false);
     const {field, model, submit} = useForm(UserModel, {onSubmit}); // Define a form using the useForm hook
-    const[cryptoData, setCryptoData] = useState<any[]>(); //TODO : fix this once the backend is done
-    const[ownedCryptos, setOwnedCryptos] = useState<CryptoHoldingDto[]>();
-    const[myTrades, setMyTrades] = useState<Trade[]>();
+    const [ownedCryptos, setOwnedCryptos] = useState<CryptoHoldingDto[]>();
+    const [myTrades, setMyTrades] = useState<Trade[]>();
+
 
     useEffect(() => {
         UserEndpoint.getAuthenticatedUser().then((user) => {
@@ -31,14 +50,22 @@ export default function AccountView() {
         });
 
         // Fetch cryptocurrencies data from the backend for the current user
-        // TODO implement getOwnedCryptoCurrencies in the backend
         TradeService.getCryptoHoldings().then((ownedCrypto) => {
             setOwnedCryptos(ownedCrypto);
         });
+
+    }, []);
+    useEffect(() => {
         TradeService.getTrades().then((trades) => {
             setMyTrades(trades);
         });
+
+        // Workaround for column width recalculation
+        setTimeout(() => {
+            gridRef.current?.recalculateColumnWidths();
+        }, 100);
     }, []);
+
 
     async function onSubmit(updatedUser: User) {
         try {
@@ -51,6 +78,7 @@ export default function AccountView() {
             console.error('Error during update:', error);
         }
     }
+
 
     return (
         <Accordion>
@@ -73,7 +101,7 @@ export default function AccountView() {
                 ) : (
                     // Render read-only view
                     <VerticalLayout>
-                        <Avatar name={`${currentUser?.firstName} ${currentUser?.lastName}`} />
+                        <Avatar name={`${currentUser?.firstName} ${currentUser?.lastName}`}/>
                         <span>Username: {currentUser?.username}</span>
                         <span>Firstname: {currentUser?.firstName}</span>
                         <span>Lastname: {currentUser?.lastName}</span>
@@ -84,11 +112,24 @@ export default function AccountView() {
                 )}
             </AccordionPanel>
             <AccordionPanel summary="History of trades">
-                <Grid items={myTrades} allRowsVisible>
-                    <GridColumn path="type" />
-                    <GridColumn path="quantity" />
-                    <GridColumn path="price" />
-                    <GridColumn path="date" />
+                <Grid items={myTrades} allRowsVisible ref={gridRef}>
+                    <GridColumn
+                        header="Trade Type" flexGrow={0} autoWidth>
+                        {({item}) => tradeTypeRenderer(item)}
+                    </GridColumn>
+                    <GridColumn
+                        header="Crypto Symbol" flexGrow={0} autoWidth>
+                        {({item}) => tradeSymboleRenderer(item)}
+                    </GridColumn>
+                    <GridColumn path="quantity" flexGrow={0} autoWidth/>
+                    <GridColumn
+                        header="Trade Price" flexGrow={0} autoWidth>
+                        {({item}) => tradePriceRenderer(item)}
+                    </GridColumn>
+                    <GridColumn
+                        header="date" flexGrow={0} autoWidth>
+                        {({item}) => tradeDateRenderer(item)}
+                    </GridColumn>
                 </Grid>
             </AccordionPanel>
             <AccordionPanel summary="Crypto chart ">
@@ -98,8 +139,8 @@ export default function AccountView() {
                         title="Cryptos"
                         values={ownedCryptos?.map((ownedCrypto) => {
                             let cryptoPrice = ownedCrypto.cryptoCurrency?.lastPrice;
-                            let owned = ownedCrypto.quantity? ownedCrypto.quantity : 0;
-                            let amountInUSD = cryptoPrice? cryptoPrice * owned : 0;
+                            let owned = ownedCrypto.quantity ? ownedCrypto.quantity : 0;
+                            let amountInUSD = cryptoPrice ? cryptoPrice * owned : 0;
                             return {
                                 name: ownedCrypto.cryptoCurrency?.symbol,
                                 value: amountInUSD
