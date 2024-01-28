@@ -30,8 +30,8 @@ export default function AccountView() {
     const [currentUser, setCurrentUser] = useState<User>();
     const [ownedCryptos, setOwnedCryptos] = useState<CryptoHoldingDto[]>();
     const [myTrades, setMyTrades] = useState<Trade[]>();
-    const [fundValue, setFundValue] = useState<number>(0);
-    const {state} = useAuth();
+    const [userFundValue, setUserFundValue] = useState<number>(0);
+    const [fundValue, setFundValue] = useState<number>(50);
 
     useEffect(() => {
         UserEndpoint.getAuthenticatedUser().then((user) => {
@@ -58,7 +58,7 @@ export default function AccountView() {
 
     useEffect(() => {
         if (currentUser) {
-            setFundValue(currentUser.funds);
+            setUserFundValue(currentUser.funds);
         }
     }, [currentUser]);
 
@@ -67,17 +67,17 @@ export default function AccountView() {
      *
      */
     const handleFundUpdate = () => {
-        if (currentUser) {
-            const updatedFund = currentUser.funds + fundValue;
-
-            setCurrentUser({...currentUser, funds: updatedFund});
-
+        if (currentUser && currentUser.id) {
+            const updatedFund = userFundValue + fundValue;
+            
             // Update the fund value using the UserService
             UserService.updateFund(
-                currentUser?.id || 0,
+                currentUser.id,
                 updatedFund
             ).then(r => {
                 // Display a success notification
+                setCurrentUser({...currentUser, funds: updatedFund});
+                setUserFundValue(updatedFund);
                 Notification.show(`Successfully updated fund to ${updatedFund}`);
             }).catch((error: EndpointError) => {
                 // Display an error notification
@@ -160,8 +160,7 @@ export default function AccountView() {
         <Accordion>
             <AccordionPanel summary="Manage Fund">
                 <VerticalLayout>
-                    <Avatar name={`${currentUser?.firstName} ${currentUser?.lastName}`}/>
-                    <span> Fund : {state.user?.funds}</span>
+                    <span> Fund : {userFundValue}</span>
                     <IntegerField
                         label="Fund"
                         helperText="Add/withdrow"
