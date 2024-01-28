@@ -130,7 +130,7 @@ public class UserService implements FormService<UserDto, Long> {
      * @param newFund the new amount of funds
      * @RolesAllowed to ensure that only a user can update his own funds
      */
-    @RolesAllowed("User")
+    @RolesAllowed("USER")
     public void updateFund(Long userId, double newFund) {
         Optional<User> optionalUser = userRepository.findById(userId);
         optionalUser.ifPresent(user -> {
