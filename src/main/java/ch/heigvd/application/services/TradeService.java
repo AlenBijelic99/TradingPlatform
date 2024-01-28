@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * The trade service
+ *
  * @author Alen Bijelic, Tegest Bogale
  */
 @BrowserCallable
@@ -32,8 +33,9 @@ public class TradeService {
 
     /**
      * Constructor
-     * @param tradeRepository The trade repository
-     * @param authenticatedUser The authenticated user
+     *
+     * @param tradeRepository          The trade repository
+     * @param authenticatedUser        The authenticated user
      * @param cryptoCurrencyRepository The crypto currency repository
      */
     @Autowired
@@ -45,7 +47,8 @@ public class TradeService {
 
     /**
      * Buy a crypto currency
-     * @param symbol The symbol of the crypto currency
+     *
+     * @param symbol   The symbol of the crypto currency
      * @param quantity The quantity
      */
     @Transactional
@@ -55,7 +58,8 @@ public class TradeService {
 
     /**
      * Sell a crypto currency
-     * @param symbol The symbol of the crypto currency
+     *
+     * @param symbol   The symbol of the crypto currency
      * @param quantity The quantity
      */
     @Transactional
@@ -69,11 +73,21 @@ public class TradeService {
         return tradeRepository.findNetQuantityByUserAndCryptoCurrency(user, cryptoCurrency).orElse(0.0);
     }
 
+    /**
+     * Get the trades of the user
+     *
+     * @return The trades
+     */
     public List<Trade> getTrades() {
         User user = getUser();
         return tradeRepository.findAllByUserOrderByDateDesc(user);
     }
 
+    /**
+     * Get the crypto holdings of the user
+     *
+     * @return The crypto holdings
+     */
     public List<CryptoHoldingDto> getCryptoHoldings() {
         User user = getUser();
         return tradeRepository.findCryptoHoldingsByUser(user);
@@ -81,8 +95,9 @@ public class TradeService {
 
     /**
      * Process a trade
-     * @param symbol The symbol of the crypto currency
-     * @param quantity The quantity
+     *
+     * @param symbol    The symbol of the crypto currency
+     * @param quantity  The quantity
      * @param tradeType The trade type
      */
     private void processTrade(String symbol, double quantity, TradeType tradeType) {
@@ -109,6 +124,7 @@ public class TradeService {
 
     /**
      * Get the user
+     *
      * @return The user
      */
     private User getUser() {
@@ -118,6 +134,7 @@ public class TradeService {
 
     /**
      * Get the crypto currency
+     *
      * @param symbol The symbol of the crypto currency
      * @return The crypto currency
      */
@@ -128,9 +145,10 @@ public class TradeService {
 
     /**
      * Update the funds of the user
-     * @param user The user
+     *
+     * @param user            The user
      * @param totalTradePrice The total trade price
-     * @param tradeType The trade type
+     * @param tradeType       The trade type
      */
     private void updateFunds(User user, double totalTradePrice, TradeType tradeType) {
         double newFunds = tradeType == TradeType.BUY ? user.getFunds() - totalTradePrice : user.getFunds() + totalTradePrice;

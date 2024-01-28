@@ -14,6 +14,7 @@ import java.util.Optional;
 
 /**
  * This interface is used to define the methods to interact with the database for the Trade entity.
+ *
  * @author Alen Bijelic, Tegest Bogale
  */
 public interface TradeRepository extends JpaRepository<Trade, Long>, JpaSpecificationExecutor<Trade> {

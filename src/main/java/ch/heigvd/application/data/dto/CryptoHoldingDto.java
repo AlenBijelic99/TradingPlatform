@@ -13,7 +13,7 @@ public class CryptoHoldingDto {
     private Double quantity;
 
     /**
-     * Constructor
+     * Constructor for the CryptoHoldingDto
      *
      * @param cryptoCurrency The CryptoCurrency
      * @param quantity       The quantity
@@ -25,6 +25,7 @@ public class CryptoHoldingDto {
 
     /**
      * Get the CryptoCurrency
+     *
      * @return The CryptoCurrency
      */
     public CryptoCurrency getCryptoCurrency() {
@@ -33,6 +34,7 @@ public class CryptoHoldingDto {
 
     /**
      * Set the CryptoCurrency
+     *
      * @param cryptoCurrency The CryptoCurrency
      */
     public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
@@ -41,6 +43,7 @@ public class CryptoHoldingDto {
 
     /**
      * Get the quantity
+     *
      * @return The quantity
      */
     public Double getQuantity() {
@@ -49,6 +52,7 @@ public class CryptoHoldingDto {
 
     /**
      * Set the quantity
+     *
      * @param quantity The quantity
      */
     public void setQuantity(Double quantity) {

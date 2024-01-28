@@ -14,25 +14,26 @@ import java.util.Optional;
  * @author Alen Bijelic, Tegest Bogale
  */
 public interface CryptoCurrencyRepository extends JpaRepository<CryptoCurrency, Long>, JpaSpecificationExecutor<CryptoCurrency> {
-  /**
-   * This method is used to find a CryptoCurrency by its name.
-   *
-   * @param name The name of the CryptoCurrency.
-   * @return The CryptoCurrency if found.
-   */
-  Optional<CryptoCurrency> findByName(String name);
+    /**
+     * This method is used to find a CryptoCurrency by its name.
+     *
+     * @param name The name of the CryptoCurrency.
+     * @return The CryptoCurrency if found.
+     */
+    Optional<CryptoCurrency> findByName(String name);
 
-  /**
-   * This method is used to find a CryptoCurrency by its symbol.
-   *
-   * @param symbol The symbol of the CryptoCurrency.
-   * @return The CryptoCurrency if found.
-   */
-  Optional<CryptoCurrency> findBySymbol(String symbol);
+    /**
+     * This method is used to find a CryptoCurrency by its symbol.
+     *
+     * @param symbol The symbol of the CryptoCurrency.
+     * @return The CryptoCurrency if found.
+     */
+    Optional<CryptoCurrency> findBySymbol(String symbol);
 
-  /**
-   * This method is used to find all CryptoCurrency ordered by id ASC.
-   * @return The list of CryptoCurrency if found
-   */
-  List<CryptoCurrency> findAllByOrderByIdAsc();
+    /**
+     * This method is used to find all CryptoCurrency ordered by id ASC.
+     *
+     * @return The list of CryptoCurrency if found
+     */
+    List<CryptoCurrency> findAllByOrderByIdAsc();
 }

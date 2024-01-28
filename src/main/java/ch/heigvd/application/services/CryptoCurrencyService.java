@@ -10,31 +10,59 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This class is used to implement the CryptoCurrencyService.
+ * It is used to get all the crypto currencies and to get one crypto currency by its symbol.
+ *
+ * @author Bijelic Alen & Bogale Tegest
+ */
 @BrowserCallable
 @RolesAllowed("USER")
 @Service
 public class CryptoCurrencyService {
-  private final CryptoCurrencyRepository cryptoCurrencyRepository;
+    private final CryptoCurrencyRepository cryptoCurrencyRepository;
 
-  @Autowired
-  public CryptoCurrencyService(CryptoCurrencyRepository cryptoCurrencyRepository) {
-    this.cryptoCurrencyRepository = cryptoCurrencyRepository;
-  }
-
-  public List<CryptoCurrency> getAll() {
-    return cryptoCurrencyRepository.findAll();
-  }
-
-  public List<CryptoCurrency> getAllWithPrice() {
-    return cryptoCurrencyRepository.findAllByOrderByIdAsc();
-  }
-
-  public CryptoCurrency getOne(String symbol) throws RuntimeException {
-    CryptoCurrency cryptoCurrency = cryptoCurrencyRepository.findBySymbol(symbol).orElse(null);
-    if (cryptoCurrency == null) {
-      System.err.println("Crypto currency " + symbol + " doesn't exist in database");
-      throw new EndpointException("CryptoCurrency not found");
+    /**
+     * Constructor
+     *
+     * @param cryptoCurrencyRepository The crypto currency repository
+     */
+    @Autowired
+    public CryptoCurrencyService(CryptoCurrencyRepository cryptoCurrencyRepository) {
+        this.cryptoCurrencyRepository = cryptoCurrencyRepository;
     }
-    return cryptoCurrency;
-  }
+
+    /**
+     * This method is used to get all the crypto currencies.
+     *
+     * @return The list of crypto currencies.
+     */
+    public List<CryptoCurrency> getAll() {
+        return cryptoCurrencyRepository.findAll();
+    }
+
+    /**
+     * This method is used to get all the crypto currencies with their price.
+     *
+     * @return The list of crypto currencies.
+     */
+    public List<CryptoCurrency> getAllWithPrice() {
+        return cryptoCurrencyRepository.findAllByOrderByIdAsc();
+    }
+
+    /**
+     * This method is used to get one crypto currency by its symbol.
+     *
+     * @param symbol The symbol of the crypto currency.
+     * @return The crypto currency.
+     * @throws RuntimeException
+     */
+    public CryptoCurrency getOne(String symbol) throws RuntimeException {
+        CryptoCurrency cryptoCurrency = cryptoCurrencyRepository.findBySymbol(symbol).orElse(null);
+        if (cryptoCurrency == null) {
+            System.err.println("Crypto currency " + symbol + " doesn't exist in database");
+            throw new EndpointException("CryptoCurrency not found");
+        }
+        return cryptoCurrency;
+    }
 }

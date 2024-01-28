@@ -19,6 +19,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * This class is used to implement the UserService.
+ * It is used to get all the users, to get one user by its id, to update a user and to delete a user.
+ * It is also used to save a user.
+ * @author Bijelic Alen & Bogale Tegest
+ */
 @BrowserCallable
 @Service
 public class UserService implements FormService<UserDto, Long> {
@@ -26,20 +32,40 @@ public class UserService implements FormService<UserDto, Long> {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Constructor of the UserService
+     * @param repository The user repository
+     * @param passwordEncoder The password encoder
+     */
     @Autowired
     public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.userRepository = repository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Get a user by its id
+     * @param id the id of the user
+     * @return the user
+     */
     public Optional<User> get(Long id) {
         return userRepository.findById(id);
     }
 
+    /**
+     * Update a user
+     * @param entity the user to update
+     * @return the updated user
+     */
     public User update(User entity) {
         return userRepository.save(entity);
     }
 
+    /**
+     * Save a user
+     * @param value
+     * @return the saved user
+     */
     @AnonymousAllowed
     @Override
     public @Nullable UserDto save(UserDto value) {
@@ -62,19 +88,38 @@ public class UserService implements FormService<UserDto, Long> {
         return UserDto.fromEntity(user);
     }
 
+    /**
+     * Delete a user by its id
+     * @param id the id of the user
+     */
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
 
+    /**
+     * Get all the users
+     * @param pageable the pageable
+     * @return the users
+     */
     public Page<User> list(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 
+    /**
+     * Get all the users with a filter
+     * @param pageable the pageable
+     * @param filter the filter
+     * @return the users
+     */
     public Page<User> list(Pageable pageable, Specification<User> filter) {
         return userRepository.findAll(filter, pageable);
     }
 
+    /**
+     * Count the number of users
+     * @return the number of users
+     */
     public int count() {
         return (int) userRepository.count();
     }

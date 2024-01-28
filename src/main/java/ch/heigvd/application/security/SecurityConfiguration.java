@@ -15,6 +15,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
+/**
+ * This class is used to configure the security of the application.
+ * It extends the VaadinWebSecurity class.
+ * @author Bijelic Alen & Bogale Tegest
+ */
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends VaadinWebSecurity {
@@ -30,6 +35,11 @@ public class SecurityConfiguration extends VaadinWebSecurity {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * This method is used to configure the security of the application.
+     * @param http The HttpSecurity object
+     * @throws Exception Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 

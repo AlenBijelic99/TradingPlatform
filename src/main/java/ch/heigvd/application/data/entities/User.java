@@ -169,7 +169,7 @@ public class User extends AbstractEntity {
 
     /**
      * To string method
-     * @return
+     * @return The string representation of the user
      */
     @Override
     public String toString() {
