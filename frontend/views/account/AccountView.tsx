@@ -7,17 +7,24 @@ import {TextField} from '@hilla/react-components/TextField';
 import {Button} from '@hilla/react-components/Button.js';
 import {useForm} from '@hilla/react-form';
 import UserModel from 'Frontend/generated/ch/heigvd/application/data/entities/UserModel';
-import {CryptoCurrencyService, UserEndpoint, UserService} from 'Frontend/generated/endpoints';
+import {CryptoCurrencyService, TradeService, UserEndpoint, UserService} from 'Frontend/generated/endpoints';
 import User from 'Frontend/generated/ch/heigvd/application/data/entities/User';
 import {ChartSeries} from "@hilla/react-components/ChartSeries";
 import {Chart} from "@hilla/react-components/Chart";
 import {Avatar} from "@hilla/react-components/Avatar";
+import CryptoHoldingDto from "Frontend/generated/ch/heigvd/application/data/dto/CryptoHoldingDto";
+import {Grid} from "@hilla/react-components/Grid";
+import {GridColumn} from "@hilla/react-components/GridColumn";
+import Trade from "Frontend/generated/ch/heigvd/application/data/entities/Trade";
 
 export default function AccountView() {
     let [currentUser, setCurrentUser] = useState<User>();
     const [editMode, setEditMode] = useState(false);
     const {field, model, submit} = useForm(UserModel, {onSubmit}); // Define a form using the useForm hook
     const[cryptoData, setCryptoData] = useState<any[]>(); //TODO : fix this once the backend is done
+    const[ownedCryptos, setOwnedCryptos] = useState<CryptoHoldingDto[]>();
+    const[myTrades, setMyTrades] = useState<Trade[]>();
+
     useEffect(() => {
         UserEndpoint.getAuthenticatedUser().then((user) => {
             setCurrentUser(user);
@@ -25,16 +32,19 @@ export default function AccountView() {
 
         // Fetch cryptocurrencies data from the backend for the current user
         // TODO implement getOwnedCryptoCurrencies in the backend
-       /* CryptoCurrencyService.getOwnedCryptoCurrencies().then((cryptoData) => {
-            setCryptoData(cryptoData);
-        });*/
+        TradeService.getCryptoHoldings().then((ownedCrypto) => {
+            setOwnedCryptos(ownedCrypto);
+        });
+        TradeService.getTrades().then((trades) => {
+            setMyTrades(trades);
+        });
     }, []);
 
     async function onSubmit(updatedUser: User) {
         try {
             // Submit the updated user profile to the backend
             //TODO : fix this. The user is not updated in the backend, not allowed error
-            //await UserService.update(updatedUser);
+            await UserService.update(updatedUser);
             setCurrentUser(updatedUser);
             setEditMode(false); // Exit edit mode after successful update
         } catch (error) {
@@ -73,12 +83,30 @@ export default function AccountView() {
                     </VerticalLayout>
                 )}
             </AccordionPanel>
-            <AccordionPanel summary="Current crypto chart ">
+            <AccordionPanel summary="History of trades">
+                <Grid items={myTrades} allRowsVisible>
+                    <GridColumn path="type" />
+                    <GridColumn path="quantity" />
+                    <GridColumn path="price" />
+                    <GridColumn path="date" />
+                </Grid>
+            </AccordionPanel>
+            <AccordionPanel summary="Crypto chart ">
                 <Chart type="pie" title="Owned Cryptos" tooltip>
+
                     <ChartSeries
                         title="Cryptos"
-                        values={cryptoData?.map((crypto) => crypto.amount)}
+                        values={ownedCryptos?.map((ownedCrypto) => {
+                            let cryptoPrice = ownedCrypto.cryptoCurrency?.lastPrice;
+                            let owned = ownedCrypto.quantity? ownedCrypto.quantity : 0;
+                            let amountInUSD = cryptoPrice? cryptoPrice * owned : 0;
+                            return {
+                                name: ownedCrypto.cryptoCurrency?.symbol,
+                                value: amountInUSD
+                            }
+                        })}
                     />
+
                 </Chart>
             </AccordionPanel>
         </Accordion>
