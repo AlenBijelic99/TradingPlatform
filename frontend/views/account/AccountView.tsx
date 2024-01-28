@@ -105,13 +105,11 @@ export default function AccountView() {
 
     return (
         <Accordion>
-            <AccordionPanel summary="Personal information">
+            <AccordionPanel summary="Fund">
                 {editMode ? (
                     // Render form in edit mode
                     <VerticalLayout>
-                        <TextField label="Username" {...field(model.username)} />
-                        <TextField label="First Name" {...field(model.firstName)} />
-                        <TextField label="Last Name" {...field(model.lastName)} />
+
                         <TextField label="Funds" {...field(model.funds)} />
 
                         <div className="flex gap-m">
@@ -125,9 +123,6 @@ export default function AccountView() {
                     // Render read-only view
                     <VerticalLayout>
                         <Avatar name={`${currentUser?.firstName} ${currentUser?.lastName}`}/>
-                        <span>Username: {currentUser?.username}</span>
-                        <span>Firstname: {currentUser?.firstName}</span>
-                        <span>Lastname: {currentUser?.lastName}</span>
                         <span>Funds: {currentUser?.funds}</span>
 
                         <Button onClick={() => setEditMode(true)}>Edit</Button>
