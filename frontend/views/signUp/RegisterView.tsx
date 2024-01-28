@@ -6,6 +6,13 @@ import {PasswordField} from "@hilla/react-components/PasswordField";
 import {Link, useNavigate} from "react-router-dom";
 import {useAuth} from "Frontend/util/auth";
 
+/**
+ * The register view. This view is displayed when the user navigates to the /register route.
+ * It displays a register form and a link to the login view.
+ * @constructor
+ * @Author Bijelic Alen & Bogale Tegest
+ * @Date 28.01.2024
+ */
 export default function RegisterView() {
     const {state} = useAuth()
     const navigate = useNavigate();

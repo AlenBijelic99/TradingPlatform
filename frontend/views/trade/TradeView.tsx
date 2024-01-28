@@ -1,7 +1,7 @@
 import {CryptoCurrencyService, TradeService} from 'Frontend/generated/endpoints.js';
 import {GridColumn} from "@hilla/react-components/GridColumn";
 import {Grid} from "@hilla/react-components/Grid";
-import React, {SetStateAction, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CryptoCurrency from "Frontend/generated/ch/heigvd/application/data/entities/CryptoCurrency";
 import {Notification} from '@hilla/react-components/Notification.js';
 import {HorizontalLayout} from '@hilla/react-components/HorizontalLayout.js';
@@ -11,6 +11,13 @@ import {RadioButton} from "@hilla/react-components/RadioButton";
 import {Button} from '@hilla/react-components/Button.js';
 import {EndpointError} from "@hilla/frontend";
 
+/**
+ * The trade view. This view is displayed when the user navigates to the /trade route.
+ * It displays a list of cryptocurrencies and a form to buy or sell cryptocurrencies when one is selected.
+ * @constructor
+ * @Author Bijelic Alen & Bogale Tegest
+ * @Date 28.01.2024
+ */
 export default function TradeView() {
     const [cryptoCurrencies, setCryptoCurrencies] = useState<CryptoCurrency[]>([]);
     const [selectedItem, setSelectedItem] = useState<CryptoCurrency | null>(null);
@@ -19,10 +26,17 @@ export default function TradeView() {
     const [tradeAction, setTradeAction] = useState<'buy' | 'sell'>('buy');
     const [netQuantity, setNetQuantity] = useState(0);
 
+    /**
+     * Load all cryptocurrencies with their current price
+     */
     const loadCryptoCurrencies = () => {
         CryptoCurrencyService.getAllWithPrice().then(setCryptoCurrencies);
     }
 
+    /**
+     * Handle the change of the USD amount input
+     * @param e the change event
+     */
     const handleUsdAmountChange = (e: any) => {
         const amountInUSD = parseFloat(e.target.value);
         if (selectedItem && amountInUSD) {
@@ -33,6 +47,10 @@ export default function TradeView() {
         setUsdAmound(e.target.value);
     };
 
+    /**
+     * Handle the change of the crypto amount input
+     * @param e
+     */
     const handleCryptoAmountChange = (e: any) => {
         const amountInCrypto = parseFloat(e.target.value);
         if (selectedItem && amountInCrypto) {
@@ -75,6 +93,9 @@ export default function TradeView() {
     }, [selectedItem]);
 
 
+    /**
+     * Handle the trade when the user clicks on the buy or sell button.
+     */
     const handleTrade = async () => {
         const amount = parseFloat(cryptoAmount);
         if (selectedItem && selectedItem.symbol && amount > 0) {
@@ -94,15 +115,24 @@ export default function TradeView() {
         }
     }
 
+    /**
+     * Set the max crypto amount
+     */
     const setMaxCryptoAmount = () => {
         setCryptoAmount(netQuantity.toString());
         handleCryptoAmountChange({target: {value: netQuantity.toString()}});
     };
 
+    /**
+     * Handle the buy click
+     */
     const handleBuyClick = () => {
         setTradeAction('buy');
     };
 
+    /**
+     * Handle the sell click
+     */
     const handleSellClick = () => {
         setTradeAction('sell');
     };
