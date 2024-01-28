@@ -16,6 +16,9 @@ import {GridColumn} from "@hilla/react-components/GridColumn";
 import Trade from "Frontend/generated/ch/heigvd/application/data/entities/Trade";
 import TradeType from "Frontend/generated/ch/heigvd/application/data/entities/TradeType";
 import CryptoHoldingDto from "Frontend/generated/ch/heigvd/application/data/dto/CryptoHoldingDto";
+import {IntegerField, IntegerFieldChangeEvent} from "@hilla/react-components/IntegerField";
+import {useAuth} from "Frontend/util/auth";
+import user from "Frontend/generated/ch/heigvd/application/data/entities/User";
 
 
 const tradeTypeRenderer = (trade: Trade) => {
@@ -35,14 +38,13 @@ const tradePriceRenderer = (trade: Trade) => {
 const tradeDateRenderer = (trade: Trade) => {
     return <span>{trade?.date || '-'}</span>;
 };
-export default function AccountView() {
+export default function AccountView (){
     const gridRef = React.useRef<any>(null);
-    let [currentUser, setCurrentUser] = useState<User>();
-    const [editMode, setEditMode] = useState(false);
-    const {field, model, submit} = useForm(UserModel, {onSubmit}); // Define a form using the useForm hook
+    const [currentUser, setCurrentUser] = useState<User>();
     const [ownedCryptos, setOwnedCryptos] = useState<CryptoHoldingDto[]>();
     const [myTrades, setMyTrades] = useState<Trade[]>();
-
+    const [fundValue, setFundValue] = useState<number>(0);
+    const {state} = useAuth();
 
     useEffect(() => {
         UserEndpoint.getAuthenticatedUser().then((user) => {
@@ -66,19 +68,31 @@ export default function AccountView() {
         }, 100);
     }, []);
 
-
-    async function onSubmit(updatedUser: User) {
-        try {
-            // Submit the updated user profile to the backend
-            //TODO : fix this. The user is not updated in the backend, not allowed error
-            await UserService.update(updatedUser);
-            setCurrentUser(updatedUser);
-            setEditMode(false); // Exit edit mode after successful update
-        } catch (error) {
-            console.error('Error during update:', error);
+    useEffect(() => {
+        // Check if currentUser has been updated and trigger any actions accordingly
+        if (currentUser) {
+            // Perform any actions based on the updated currentUser
         }
+    }, [currentUser]);
+    const handleFundUpdate = () => {
+        if (currentUser) {
+            const updatedFund = currentUser.funds + fundValue;
+
+            // Update the fund value in the component state
+            setCurrentUser({...currentUser, funds: updatedFund});
+
+            // Update the fund value using the UserService
+            UserService.updateFund(
+                currentUser?.id || 0,
+                updatedFund
+            )
+        };
     }
-    function calculateCurrentValue(symbol: string | undefined,quantity: number,  trades: Trade[] | undefined): number {
+    const handleFundChange = (e: IntegerFieldChangeEvent) => {
+        setFundValue(parseInt(e.target.value));
+    };
+
+    function calculateCurrentValue(symbol: string | undefined, quantity: number, trades: Trade[] | undefined): number {
         if (!symbol || !trades) {
             //TODO remove at the end
             console.error('Symbol or trades not defined');
@@ -95,7 +109,7 @@ export default function AccountView() {
             } else if (trade.type === TradeType.SELL) {
                 totalValue -= trade.price * trade.quantity;
             }
-            return totalValue  ;
+            return totalValue;
         }, 0);
         currentValue += quantity
 
@@ -105,29 +119,21 @@ export default function AccountView() {
 
     return (
         <Accordion>
-            <AccordionPanel summary="Fund">
-                {editMode ? (
-                    // Render form in edit mode
-                    <VerticalLayout>
-
-                        <TextField label="Funds" {...field(model.funds)} />
-
-                        <div className="flex gap-m">
-                            <Button onClick={async () => await submit() && setEditMode(false)} theme="primary">
-                                Save
-                            </Button>
-                            <Button onClick={() => setEditMode(false)}>Cancel</Button>
-                        </div>
-                    </VerticalLayout>
-                ) : (
-                    // Render read-only view
-                    <VerticalLayout>
-                        <Avatar name={`${currentUser?.firstName} ${currentUser?.lastName}`}/>
-                        <span>Funds: {currentUser?.funds}</span>
-
-                        <Button onClick={() => setEditMode(true)}>Edit</Button>
-                    </VerticalLayout>
-                )}
+            <AccordionPanel summary="Manage Fund">
+                <VerticalLayout>
+                    <Avatar name={`${currentUser?.firstName} ${currentUser?.lastName}`}/>
+                    <span> Fund : {state.user?.funds}</span>
+                    <IntegerField
+                        label="Fund"
+                        helperText="Add/withdrow"
+                        min={0}
+                        max={10000000}
+                        value={fundValue.toString()}
+                        stepButtonsVisible
+                        onChange={(e) => handleFundChange(e)}
+                    />
+                    <Button onClick={handleFundUpdate}>Update Fund</Button>
+                </VerticalLayout>
             </AccordionPanel>
             <AccordionPanel summary="History of trades">
                 <Grid items={myTrades} allRowsVisible ref={gridRef}>
@@ -162,9 +168,9 @@ export default function AccountView() {
                             const cryptoPriceInUSD = ownedCrypto.cryptoCurrency?.lastPrice || 10000;
 
                             // Calculate the current value in USD based on historical trades
-                            const currentValueUSD = calculateCurrentValue(symbol, quantity, myTrades) * cryptoPriceInUSD ;
+                            const currentValueUSD = calculateCurrentValue(symbol, quantity, myTrades) * cryptoPriceInUSD;
 
-                            console.log('Chart Data:', { name: symbol, y: currentValueUSD }); // tODO remove at the end Log the data
+                            console.log('Chart Data:', {name: symbol, y: currentValueUSD}); // tODO remove at the end Log the data
 
                             return {
                                 name: symbol,
