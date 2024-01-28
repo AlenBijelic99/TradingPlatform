@@ -4,6 +4,9 @@ This project is a trading platform for cryptocurrencies using Hilla (Spring Boot
 sell listed cryptocurrencies, and to consult their portfolio.
 The dashboard displays the current price of the cryptocurrencies that is retrieved from a JMS queue every 10 seconds.
 We use the Coinbase API to get the current price of the cryptocurrencies.
+For a more descriptive explanation of the project, please refer to
+the [initial report](doc/AMT_Labo3_Application_InitialReport.pdf) and
+the [final report](doc/AMT_Labo3_Application_Report.pdf).
 
 ## Running the database
 
@@ -61,6 +64,11 @@ source directory, contains the server-side Java views</td></tr>
   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>data/</code></td><td>Entities tests</td></tr>
   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>services/</code></td><td>CryptoPrice and JmsPrice tests</td></tr>
 </table>
+
+## Note
+
+Usually we do not want to commit the config/secrets files to the repository. However, as it is a school project, we
+decided to commit them to the repository to make it easier for the teachers to test the application.
 
 ## Useful links
 
