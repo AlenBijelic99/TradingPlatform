@@ -3,6 +3,9 @@ package ch.heigvd.application.data.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
 /**
  * This class is used to represent a user of the application.
  *
@@ -25,6 +28,9 @@ public class Trade extends AbstractEntity {
 
     @Column(name = "quantity", nullable = false)
     private double quantity;
+
+    @Column(name = "date", nullable = false)
+    private Timestamp date;
 
     @Enumerated(EnumType.STRING)
     private TradeType type;
@@ -124,6 +130,24 @@ public class Trade extends AbstractEntity {
     }
 
     /**
+     * Get the date of the trade
+     *
+     * @return The date of the trade
+     */
+    public Timestamp getDate() {
+        return date;
+    }
+
+    /**
+     * Set the date of the trade
+     *
+     * @param date The date of the trade
+     */
+    public void setDate(Timestamp date) {
+        this.date = date;
+    }
+
+    /**
      * Get the type of the trade
      *
      * @return The type of the trade
@@ -154,5 +178,10 @@ public class Trade extends AbstractEntity {
                 ", quantity=" + quantity +
                 ", type=" + type +
                 '}';
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        date = Timestamp.from(Instant.now());
     }
 }

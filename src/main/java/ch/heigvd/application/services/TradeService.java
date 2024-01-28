@@ -1,5 +1,6 @@
 package ch.heigvd.application.services;
 
+import ch.heigvd.application.data.dto.CryptoHoldingDto;
 import ch.heigvd.application.data.entities.CryptoCurrency;
 import ch.heigvd.application.data.entities.Trade;
 import ch.heigvd.application.data.entities.TradeType;
@@ -13,6 +14,8 @@ import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * The trade service
@@ -60,6 +63,22 @@ public class TradeService {
         processTrade(symbol, quantity, TradeType.SELL);
     }
 
+    public double getNetQuantity(String symbol) {
+        User user = getUser();
+        CryptoCurrency cryptoCurrency = getCryptoCurrency(symbol);
+        return tradeRepository.findNetQuantityByUserAndCryptoCurrency(user, cryptoCurrency).orElse(0.0);
+    }
+
+    public List<Trade> getTrades() {
+        User user = getUser();
+        return tradeRepository.findAllByUserOrderByDateDesc(user);
+    }
+
+    public List<CryptoHoldingDto> getCryptoHoldings() {
+        User user = getUser();
+        return tradeRepository.findCryptoHoldingsByUser(user);
+    }
+
     /**
      * Process a trade
      * @param symbol The symbol of the crypto currency
@@ -70,10 +89,20 @@ public class TradeService {
         User user = getUser();
         CryptoCurrency cryptoCurrency = getCryptoCurrency(symbol);
 
-        double totalTradePrice = cryptoCurrency.getLastPrice() * quantity;
-        validateFunds(user, totalTradePrice, tradeType);
+        if (tradeType == TradeType.BUY) {
+            double totalTradePrice = cryptoCurrency.getLastPrice() * quantity;
+            if (user.getFunds() - totalTradePrice < 0) {
+                throw new EndpointException("Not enough funds");
+            }
+            updateFunds(user, totalTradePrice, tradeType);
+        } else {
+            double netQuantity = tradeRepository.findNetQuantityByUserAndCryptoCurrency(user, cryptoCurrency).orElse(0.0);
+            if (netQuantity - quantity < 0) {
+                throw new EndpointException("Not enough crypto currency");
+            }
+            updateFunds(user, cryptoCurrency.getLastPrice() * quantity, tradeType);
+        }
 
-        updateFunds(user, totalTradePrice, tradeType);
         Trade trade = new Trade(user, cryptoCurrency.getLastPrice(), cryptoCurrency, quantity, tradeType);
         tradeRepository.save(trade);
     }
@@ -95,18 +124,6 @@ public class TradeService {
     private CryptoCurrency getCryptoCurrency(String symbol) {
         return cryptoCurrencyRepository.findBySymbol(symbol)
                 .orElseThrow(() -> new EndpointException("Crypto currency not found: " + symbol));
-    }
-
-    /**
-     * Validate the funds of the user
-     * @param user The user
-     * @param totalTradePrice The total trade price
-     * @param tradeType The trade type
-     */
-    private void validateFunds(User user, double totalTradePrice, TradeType tradeType) {
-        if (tradeType == TradeType.BUY && user.getFunds() - totalTradePrice < 0) {
-            throw new EndpointException("Not enough funds");
-        }
     }
 
     /**
