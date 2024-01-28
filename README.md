@@ -1,7 +1,18 @@
-# Custom project from Hilla
+# Trading platform
 
-This project can be used as a starting point to create your own Hilla application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
+This project is a trading platform for cryptocurrencies using Hilla (Spring Boot and React). It allows users to buy and
+sell listed cryptocurrencies, and to consult their portfolio.
+The dashboard displays the current price of the cryptocurrencies that is retrieved from a JMS queue every 10 seconds.
+We use the Coinbase API to get the current price of the cryptocurrencies.
+
+## Running the database
+
+The project uses a PostgreSQL database. To run it, you can use the provided `docker-compose.yml` file. Run the following
+command in the root directory of the project:
+
+```bash
+docker-compose up
+```
 
 ## Running the application
 
@@ -39,13 +50,20 @@ App Layout</a></td></tr>
 components</td></tr>
   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>themes/</code></td><td>Custom  
 CSS styles</td></tr>
-  <tr><td><code>src/main/java/&lt;groupId&gt;/</code></td><td>Server-side 
+  <tr><td><code>src/main/java/ch/heigvd/application</code></td><td>Server-side 
 source directory, contains the server-side Java views</td></tr>
   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>Application.java</code></td><td>Server entry-point</td></tr>
+  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>data/</code></td><td>Data definitions (DTOs, entities and repositories)</td></tr>
+  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>security/</code></td><td>App security (authentication & authorization)</td></tr>
+  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>services/</code></td><td>Services (JMS and endpoints)</td></tr>
+  <tr><td><code>test/java/ch/heigvd/application/</code></td><td>Server-side test directory</td></tr>
+  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>data/</code></td><td>Entities tests</td></tr>
+  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>services/</code></td><td>CryptoPrice and JmsPrice tests</td></tr>
 </table>
 
 ## Useful links
 
 - Read the documentation at [hilla.dev/docs](https://hilla.dev/docs/).
-- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/hilla) or join our [Discord channel](https://discord.gg/MYFq5RTbBn).
+- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/hilla) or join
+  our [Discord channel](https://discord.gg/MYFq5RTbBn).
 - Report issues, create pull requests in [GitHub](https://github.com/vaadin/hilla).
