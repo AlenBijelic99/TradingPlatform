@@ -17,6 +17,7 @@ export default function TradeView() {
     const [usdAmound, setUsdAmound] = useState("0");
     const [cryptoAmount, setCryptoAmount] = useState("0");
     const [tradeAction, setTradeAction] = useState<'buy' | 'sell'>('buy');
+    const [netQuantity, setNetQuantity] = useState(0);
 
     const loadCryptoCurrencies = () => {
         CryptoCurrencyService.getAllWithPrice().then(setCryptoCurrencies);
@@ -61,12 +62,24 @@ export default function TradeView() {
         }
     }, [cryptoCurrencies]);
 
+    useEffect(() => {
+        if (selectedItem && selectedItem.symbol) {
+            TradeService.getNetQuantity(selectedItem.symbol).then(setNetQuantity).catch((error) => {
+                if (error instanceof EndpointError) {
+                    Notification.show(`Error during net quantity fetch: ${error.message}`, {theme: 'error'});
+                } else {
+                    Notification.show(`Error during net quantity fetch`, {theme: 'error'});
+                }
+            });
+        }
+    }, [selectedItem]);
+
 
     const handleTrade = async () => {
         const amount = parseFloat(cryptoAmount);
         if (selectedItem && selectedItem.symbol && amount > 0) {
             const tradeFunction = tradeAction === 'buy' ? TradeService.buy : TradeService.sell;
-            try{
+            try {
                 await tradeFunction(selectedItem.symbol, amount)
                 Notification.show(tradeAction === 'buy' ? 'Successfully buy trade' : 'Successfully sell trade', {theme: 'success'});
                 setUsdAmound("0");
@@ -80,6 +93,11 @@ export default function TradeView() {
             }
         }
     }
+
+    const setMaxCryptoAmount = () => {
+        setCryptoAmount(netQuantity.toString());
+        handleCryptoAmountChange({target: {value: netQuantity.toString()}});
+    };
 
     const handleBuyClick = () => {
         setTradeAction('buy');
@@ -120,10 +138,16 @@ export default function TradeView() {
                                              onChange={handleUsdAmountChange}>
                                     <div slot="prefix">$</div>
                                 </NumberField>
-                                <NumberField label={`${selectedItem.symbol} Amount`} value={cryptoAmount} onChange={handleCryptoAmountChange}>
+                                <NumberField label={`${selectedItem.symbol} Amount`} value={cryptoAmount}
+                                             onChange={handleCryptoAmountChange}>
                                     <div slot="prefix">{selectedItem.symbol}</div>
                                 </NumberField>
                             </HorizontalLayout>
+                            {tradeAction === 'sell' && (
+                                <p onClick={setMaxCryptoAmount}>
+                                    Owned {selectedItem.symbol} : {netQuantity}
+                                </p>
+                            )}
                             <Button onClick={handleTrade} theme={buttonTheme}>
                                 {tradeAction === 'buy' ? 'Buy' : 'Sell'}
                             </Button>
