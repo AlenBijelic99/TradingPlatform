@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2024-01-27T15:54:11.466Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.8 Chrome/114.0.5735.289 Electron/25.5.0 Safari/537.36" etag="TqyExEiNrFap_tPGiBns" version="21.6.8" type="device" pages="2">
+<mxfile host="Electron" modified="2024-01-28T20:40:27.239Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.0.2 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="uwRuqgiIOq2qdoagftGT" version="23.0.2" type="device" pages="2">
   <diagram name="Page-1" id="TKr8P1i9HPOHspmwD3fK">
-    <mxGraphModel dx="211" dy="616" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="391" dy="1188" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -52,7 +52,7 @@
         <mxCell id="kvI-nCKSytWQ5_GU7EgC-33" value="" style="whiteSpace=wrap;html=1;aspect=fixed;dashed=1;dashPattern=12 12;" parent="kvI-nCKSytWQ5_GU7EgC-36" vertex="1">
           <mxGeometry y="-10" width="219.39" height="219.39" as="geometry" />
         </mxCell>
-        <mxCell id="kvI-nCKSytWQ5_GU7EgC-32" value="&lt;h1&gt;&lt;font style=&quot;font-weight: normal; font-size: 17px;&quot;&gt;Price updates from blockchair&lt;/font&gt;&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;fontColor=#46495D;align=center;" parent="kvI-nCKSytWQ5_GU7EgC-36" vertex="1">
+        <mxCell id="kvI-nCKSytWQ5_GU7EgC-32" value="&lt;h1&gt;&lt;font style=&quot;font-weight: normal; font-size: 17px;&quot;&gt;Price updates from CoinbaseAPI&lt;/font&gt;&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;fontColor=#46495D;align=center;" parent="kvI-nCKSytWQ5_GU7EgC-36" vertex="1">
           <mxGeometry x="9.077755102040811" y="100.27384615384614" width="190" height="80" as="geometry" />
         </mxCell>
         <mxCell id="kvI-nCKSytWQ5_GU7EgC-20" value="" style="shape=image;aspect=fixed;image=data:image/png,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACSklEQVR4nO2Z307bMBTG8xq7RbzGdgdtSJwUkpVM4n4gbY8xNUZi2LwAdO3KponFWSlr4YI/3fUq7U0mdn+QbUKBgUraOq42H+mTKjU+/n7nHEeRbFkmTJgwMdMRMxrGjFzECf2DGYUiFPO9Enoepzsrk5lPKCnKNH5MCdkau/LazTOpTUaWcwNgRvu6jeNspBg5y9+BAmcejxS5HKcDMEuyDAAzHQDtI1RL3sOb1gas1SsQ7TpT1Vq9Am/316HGttUBvGxHgBiC1b3pmo92HZGT5662X6kDKHd9WDjxoHSEIGy6UzMfNl2Rk+fme6jrQNOB8pEnNlo49sA/mByi8sWV+bj577IwygCyVntfZbW47EME1UZ+kOoHB5z2MI/LEETXo6kUIFOw70KpKzdf7CFY/vx0iBW+tifXlnoIgk931xYCcFPFb7eqmCJYrY84qMlwZJw2EjnuP1cYQCZe/cWsol0Pwtbf3Qg/umLGRceOPTH70SP5CgfIusHPw0MH/PZBtTsIqiPeYFgHgBwRF7yDuwf8BurEE//xZ0blwboAHhqXbKyC1tPfUFg3gOhG3QU3leK/86zFswAwibABsP7RDgQN9eaDhkKAF50l5QDPO0vqAOYHnoBQ0YmgIc3P/1T4OV3+8Rqe/bKVyu5vqAN4l24LiLmBP3XjcwMf7P662EMZgE5Z/yEAudRtGl8rTsjv/AAJPddtHA91mhuAXy7MgHHgqqXUzw0gu0C2dJuPE7JpTRL8coG3sPArJkZPx668CRMmTFhFxRVWL97eOALGLQAAAABJRU5ErkJggg==;" parent="kvI-nCKSytWQ5_GU7EgC-36" vertex="1">
