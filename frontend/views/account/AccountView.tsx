@@ -78,7 +78,7 @@ export default function AccountView() {
             console.error('Error during update:', error);
         }
     }
-    function calculateCurrentValue(symbol: string | undefined,  trades: Trade[] | undefined): number {
+    function calculateCurrentValue(symbol: string | undefined,quantity: number,  trades: Trade[] | undefined): number {
         if (!symbol || !trades) {
             //TODO remove at the end
             console.error('Symbol or trades not defined');
@@ -97,16 +97,9 @@ export default function AccountView() {
             }
             return totalValue  ;
         }, 0);
+        currentValue += quantity
 
         return currentValue;
-    }
-    function getTradePrice(trade: Trade): number {
-        if (trade.type === TradeType.BUY) {
-            return trade.price;
-        } else if (trade.type === TradeType.SELL) {
-            return -trade.price;
-        }
-        return 0;
     }
 
 
@@ -168,12 +161,13 @@ export default function AccountView() {
                         title="Cryptos"
                         values={ownedCryptos?.map((ownedCrypto) => {
                             const symbol = ownedCrypto.cryptoCurrency?.symbol;
+                            const quantity = ownedCrypto.quantity || 0;
 
                             // Get the current exchange rate or price for the cryptocurrency in USD //TODO change with usd value
                             const cryptoPriceInUSD = ownedCrypto.cryptoCurrency?.lastPrice || 10000;
 
                             // Calculate the current value in USD based on historical trades
-                            const currentValueUSD = calculateCurrentValue(symbol,  myTrades) * cryptoPriceInUSD ;
+                            const currentValueUSD = calculateCurrentValue(symbol, quantity, myTrades) * cryptoPriceInUSD ;
 
                             console.log('Chart Data:', { name: symbol, y: currentValueUSD }); // tODO remove at the end Log the data
 
