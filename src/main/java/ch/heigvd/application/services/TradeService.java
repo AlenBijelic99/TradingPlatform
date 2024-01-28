@@ -1,5 +1,6 @@
 package ch.heigvd.application.services;
 
+import ch.heigvd.application.data.dto.CryptoHoldingDto;
 import ch.heigvd.application.data.entities.CryptoCurrency;
 import ch.heigvd.application.data.entities.Trade;
 import ch.heigvd.application.data.entities.TradeType;
@@ -13,6 +14,8 @@ import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * The trade service
@@ -66,6 +69,16 @@ public class TradeService {
         return tradeRepository.findNetQuantityByUserAndCryptoCurrency(user, cryptoCurrency).orElse(0.0);
     }
 
+    public List<Trade> getTrades() {
+        User user = getUser();
+        return tradeRepository.findAllByUserOrderByDateDesc(user);
+    }
+
+    public List<CryptoHoldingDto> getCryptoHoldings() {
+        User user = getUser();
+        return tradeRepository.findCryptoHoldingsByUser(user);
+    }
+
     /**
      * Process a trade
      * @param symbol The symbol of the crypto currency
@@ -87,6 +100,7 @@ public class TradeService {
             if (netQuantity - quantity < 0) {
                 throw new EndpointException("Not enough crypto currency");
             }
+            updateFunds(user, cryptoCurrency.getLastPrice() * quantity, tradeType);
         }
 
         Trade trade = new Trade(user, cryptoCurrency.getLastPrice(), cryptoCurrency, quantity, tradeType);
