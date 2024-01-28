@@ -38,6 +38,7 @@ Once the JAR file is built, you can run it using
 
 <table style="width:100%; text-align: left;">
   <tr><th>Directory</th><th>Description</th></tr>
+  <tr><td><code>doc/</code></td><td>Initial report, final report and diagrams</td></tr>
   <tr><td><code>frontend/</code></td><td>Client-side source directory</td></tr>
   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>index.html</code></td><td>HTML template</td></tr>
   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>index.ts</code></td><td>Frontend 
