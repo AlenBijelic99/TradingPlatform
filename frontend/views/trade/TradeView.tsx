@@ -119,6 +119,7 @@ export default function TradeView() {
                             const item = e.detail.value;
                             setSelectedItem(item || null);
                         }}
+                        selectedItems={[selectedItem]}
                         allRowsVisible
                     >
                         <GridColumn path="name"/>
